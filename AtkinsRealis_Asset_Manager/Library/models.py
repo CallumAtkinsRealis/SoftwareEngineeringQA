@@ -25,6 +25,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True)
     firstname = models.CharField(max_length=255)
     lastname = models.CharField(max_length=255)
@@ -37,8 +38,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     groups = models.ManyToManyField(Group, related_name='custom_users')
     user_permissions = models.ManyToManyField(Permission, related_name='custom_users')
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['firstname', 'lastname', 'job_title']
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['username', 'firstname', 'lastname', 'job_title']
 
     objects = CustomUserManager()
 

@@ -1,0 +1,44 @@
+{% extends "master.html" %}
+{% block title_1 %}User Information{% endblock %}
+{% block content %}
+<h1>User Information</h1>
+<form method="post">
+    {% csrf_token %}
+    {% if form.errors %}
+    <div style="color: red;">
+        Please correct the errors below.
+    </div>
+    {% endif %}
+    {% if messages %}
+    {% for message in messages %}
+    <div style="color: green;">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" value="{{ form.instance.email }}" readonly><br><br>
+
+    <label for="firstname">First Name:</label>
+    <input type="text" id="firstname" name="firstname" value="{{ form.instance.firstname }}"><br><br>
+
+    <label for="lastname">Last Name:</label>
+    <input type="text" id="lastname" name="lastname" value="{{ form.instance.lastname }}"><br><br>
+
+    <label for="job_title">Job Title:</label>
+    <input type="text" id="job_title" name="job_title" value="{{ form.instance.job_title }}"><br><br>
+
+    <label for="password_creation_date">Password Creation Date:</label>
+    <input type="text" id="password_creation_date" name="password_creation_date" value="{{ form.instance.password_creation_date }}" readonly><br><br>
+
+    <label for="is_active">Active:</label>
+    <input type="checkbox" id="is_active" name="is_active" {% if form.instance.is_active %}checked{% endif %}><br><br>
+
+    <label for="is_staff">Staff:</label>
+    <input type="checkbox" id="is_staff" name="is_staff" {% if form.instance.is_staff %}checked{% endif %}><br><br>
+
+    <!-- Add other fields as needed -->
+
+    <input type="submit" value="Update">
+</form>
+{% endblock %}
