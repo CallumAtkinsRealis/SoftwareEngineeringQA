@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AtkinsRéalis Asset Manager</title>
+    <style>
+        /* Header Styles */
+        .header {
+            font-size: 15px;
+            background-color: #007bff; /* Blue color */
+            color: #fff; /* White text */
+            padding: 15px; /* Add some padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 30px; /* Adjust the font size as needed */
+            font-weight: bold;
+            margin-left: 20px; /* Add some margin to separate from left edge */
+}
+
+        .logo {
+            max-height: 50px; /* Adjust the height as needed */
+            margin-right: 20px; /* Add some margin to separate from title */
+        }
+
+        .nav-links {
+            list-style-type: none; /* Remove bullet points */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-right: 15px; /* Add some space between each link */
+        }
+
+        .nav-links li a {
+            color: #fff; /* White text */
+            text-decoration: none; /* Remove underline */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-text">AtkinsRéalis Asset Manager</div>
+        <div>
+        <h1>{% block title_1 %}Page Title{% endblock %}</h1>
+    </div>
+    <div>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Blog</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="content">
+    {% block content %}
+    <!-- Your content goes here -->
+    {% endblock %}
+</div>
+
+</body>
+</html>
