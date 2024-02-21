@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+##SESSION_COOKIE_AGE = 60
 
 # Application definition
 
