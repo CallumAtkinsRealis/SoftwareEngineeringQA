@@ -64,10 +64,17 @@
 </div>
 
 <div class="content">
+    {% if messages %}
+    <div style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+      <ul class="messages" style="list-style-type: none; padding: 0;">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
     {% block content %}
     <!-- Your content goes here -->
     {% endblock %}
-</div>
-
 </body>
 </html>
