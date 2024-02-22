@@ -6,3 +6,29 @@
 <head>
     <title>{% block title_1 %}Home Page{% endblock %}</title>
 </head>
+
+<body>
+    {% block content %}
+    <h1>User List</h1>
+        <table>
+            <tr>
+                <th style="min-width: 150px;">First Name</th>
+                <th style="min-width: 150px;">Last Name</th>
+                <th style="min-width: 250px;">Email</th>
+                <th style="min-width: 150px;">Password</th>
+                <th style="min-width: 200px;">Password Creation Date</th>
+                <th style="min-width: 150px;">Job Title</th>
+            </tr>
+    {% for x in myusers %}
+            <tr>
+                <td>{{ x.firstname }}</td>
+                <td>{{ x.lastname }}</td>
+                <td>{{ x.email }}</td>
+                <td>{{ x.password }}</td>
+                <td>{{ x.password_creation_date }}</td>
+                <td>{{ x.job_title }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endblock %}
+</body>

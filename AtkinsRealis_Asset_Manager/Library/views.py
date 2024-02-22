@@ -30,8 +30,17 @@ def login_request(request):
     return render(request, 'login_page.html', {'form': form})
 
 def home(request):
-    template = loader.get_template('home.html')
-    return HttpResponse(template.render())
+    # create a dictionary 
+    myusers = CustomUser.objects.all().values()
+
+    for user in myusers:
+        user['password'] = '*' * 12
+
+    context = { 
+            "myusers" : myusers, 
+        } 
+    # return response 
+    return render(request, "home.html", context)
 
 def create(request):
     if request.method == 'POST':
