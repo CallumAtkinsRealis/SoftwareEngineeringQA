@@ -29,6 +29,8 @@ ALLOWED_HOSTS = []
 
 ##SESSION_COOKIE_AGE = 60
 
+LOGIN_URL = '../login/'
+
 # Application definition
 
 INSTALLED_APPS = [

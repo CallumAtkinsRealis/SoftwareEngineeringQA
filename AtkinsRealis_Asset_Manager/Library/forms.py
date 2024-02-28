@@ -1,5 +1,5 @@
 from django import forms
-from .models import CustomUser
+from .models import CustomUser, AssetBooking
 
 class CustomUserForm(forms.ModelForm):
     class Meta:
@@ -39,3 +39,8 @@ class CustomUserCreationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+    
+class AssetBookingForm(forms.ModelForm):
+    class Meta:
+        model = AssetBooking
+        fields = ['booked_by', 'asset_category', 'asset_name', 'project_name', 'project_number', 'project_manager', 'date_booked_for', 'duration', 'approved']

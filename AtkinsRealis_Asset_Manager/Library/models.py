@@ -2,6 +2,9 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.contrib.auth.models import Group, Permission
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -45,3 +48,39 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+class AssetBooking(models.Model):
+
+    BOOKING_ID_CHOICES = (
+        ('CAM', 'Camera'),
+        ('LAS', 'Laser Scanner'),
+        ('VRH', 'VR Headset'),
+        ('ARH', 'AR Headset'),
+        ('ROB', 'Robot'),
+    )
+
+    DURATION_CHOICES = (
+        ('HD', 'Half Day'),
+        ('FD', 'Full Day'),
+        ('MD', 'Multiple Days'),
+    )
+
+    booking_id = models.AutoField(primary_key=True)
+    booked_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings_as_booked_by')
+    asset_category = models.CharField(max_length=3, choices=BOOKING_ID_CHOICES)
+    asset_name = models.CharField(max_length=100)  # You can further restrict choices dynamically based on asset category
+    asset_id = models.CharField(max_length=100)  # This will be automatically filled later
+    project_name = models.CharField(max_length=255)
+    project_number = models.CharField(max_length=20)
+    project_manager = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_booked_for = models.DateField()
+    duration = models.CharField(max_length=2, choices=DURATION_CHOICES)
+    approved = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        # Logic to automatically fill asset_id based on the selected asset category and name
+        # This will be implemented based on your specific requirements
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Booking ID: {self.booking_id}, Asset: {self.asset_name}, Project: {self.project_name}"

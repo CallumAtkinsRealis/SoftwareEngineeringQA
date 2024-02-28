@@ -14,6 +14,7 @@
             <tr>
                 <th style="min-width: 150px;">First Name</th>
                 <th style="min-width: 150px;">Last Name</th>
+                <th style="min-width: 150px;">Username</th>
                 <th style="min-width: 250px;">Email</th>
                 <th style="min-width: 150px;">Password</th>
                 <th style="min-width: 200px;">Password Creation Date</th>
@@ -23,10 +24,43 @@
             <tr>
                 <td>{{ x.firstname }}</td>
                 <td>{{ x.lastname }}</td>
+                <td>{{ x.username }}</td>
                 <td>{{ x.email }}</td>
                 <td>{{ x.password }}</td>
                 <td>{{ x.password_creation_date }}</td>
                 <td>{{ x.job_title }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    <h1>Booking List</h1>
+        <table>
+            <tr>
+                <th style="min-width: 150px;">Booking ID:</th>
+                <th style="min-width: 150px;">Booked By:</th>
+                <th style="min-width: 150px;">Asset Category:</th>
+                <th style="min-width: 150px;">Asset Name:</th>
+                <th style="min-width: 150px;">Asset ID:</th>
+                <th style="min-width: 250px;">Project Name:</th>
+                <th style="min-width: 150px;">Project Number:</th>
+                <th style="min-width: 200px;">Project Manager:</th>
+                <th style="min-width: 150px;">Date Booked For:</th>
+                <th style="min-width: 150px;">Duration:</th>
+                <th style="min-width: 150px;">Approved:</th>
+            </tr>
+    {% for x in mybookings %}
+            <tr>
+                <td>{{ x.booking_id }}</td>
+                <td>{{ x.booked_by }}</td>
+                <td>{{ x.asset_category }}</td>
+                <td>{{ x.asset_name }}</td>
+                <td>{{ x.asset_id }}</td>
+                <td>{{ x.project_name }}</td>
+                <td>{{ x.project_number }}</td>
+                <td>{{ x.project_manager }}</td>
+                <td>{{ x.date_booked_for }}</td>
+                <td>{{ x.duration }}</td>
+                <td>{{ x.approved }}</td>
             </tr>
             {% endfor %}
         </table>
