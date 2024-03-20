@@ -60,12 +60,6 @@ class AssetBooking(models.Model):
         ('ROB', 'Robot'),
     )
 
-    DURATION_CHOICES = (
-        ('HD', 'Half Day'),
-        ('FD', 'Full Day'),
-        ('MD', 'Multiple Days'),
-    )
-
     booking_id = models.AutoField(primary_key=True)
     booked_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='bookings_as_booked_by')
     asset_category = models.CharField(max_length=3, choices=BOOKING_ID_CHOICES)
@@ -75,8 +69,6 @@ class AssetBooking(models.Model):
     project_number = models.CharField(max_length=20)
     project_manager = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     date_booked_for = models.DateField()
-    duration = models.CharField(max_length=2, choices=DURATION_CHOICES)
-    date_to = models.DateField(blank=True, null=True)  # New field for end date, blank and null allowed
     approved = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
@@ -84,10 +76,6 @@ class AssetBooking(models.Model):
         if not self.asset_id:  # Only fill if not already set
             self.asset_id = f"{self.asset_category}-{self.asset_name}"  # Example logic, adjust as needed
         super().save(*args, **kwargs)
-
-    def clean(self):
-        if self.duration == 'MD' and not self.date_to:
-            raise ValidationError("For multiple days duration, 'date_to' field is required.")
 
     def __str__(self):
         return f"Booking ID: {self.booking_id}, Asset: {self.asset_name}, Project: {self.project_name}"

@@ -9,7 +9,7 @@
 
 <body>
     {% block content %}
-    <div class="button-container">
+    <div class="button-container1">
         <a href="/user_info/" class="button">User Info</a>
         <a href="/create_user/"class="button button-secondary">Create User</a>
     </div>
@@ -24,6 +24,7 @@
                 <th style="min-width: 150px;">Password:</th>
                 <th style="min-width: 200px;">Password Creation Date:</th>
                 <th style="min-width: 150px;">Job Title:</th>
+                <th style="min-width: 150px;">Update:</th>
                 {% if request.user.is_staff %}
                 <th style="min-width: 150px;">Delete:</th>
                 {% endif %}
@@ -38,6 +39,7 @@
                 <td>{{ x.password }}</td>
                 <td>{{ x.password_creation_date }}</td>
                 <td>{{ x.job_title }}</td>
+                <td><a href="{% url 'user_update' x.email %}">Update</a></td>
                 {% if request.user.is_staff %}
                 <td><a href="{% url 'delete_user' x.email %}">Delete</a></td>
                 {% endif %}

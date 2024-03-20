@@ -1,12 +1,12 @@
 {% extends "master.html" %}
 
 {% block title_1 %}
-    Create Asset Booking
+    Modify Booking
 {% endblock %}
 
 {% block content %}
     <div class="container">
-        <h2>Create Asset Booking</h2>
+        <h2>Modify Existing Booking</h2>
         <form method="post" class="forms">
             {% csrf_token %}
             <div class="form-group">
@@ -41,7 +41,7 @@
                 <label for="id_approved" class="form-label">Approved:</label>
                 {{ form.approved }}
             </div>
-            <button type="submit" class="btn btn-primary">Create Asset Booking</button>
+            <button type="submit" class="btn btn-primary">Update Booking</button>
         </form>
         <div id="error-message" class="error-message" style="display: none;"></div>
     </div>

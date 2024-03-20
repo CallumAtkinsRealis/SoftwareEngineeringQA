@@ -9,8 +9,8 @@
 
 <body>
     {% block content %}
-    <div class="button-container">
-        <li><a href="/new_booking/">Booking Manager</a></li>
+    <div class="button-container1">
+        <a href="/new_booking/" class="button">Booking Manager</a>
     </div>
     <h1>Booking List</h1>
         <table>
@@ -23,8 +23,8 @@
                 <th style="min-width: 250px;">Project Name:</th>
                 <th style="min-width: 200px;">Project Manager:</th>
                 <th style="min-width: 150px;">Date Booked For:</th>
-                <th style="min-width: 150px;">Duration:</th>
                 <th style="min-width: 150px;">Approved:</th>
+                <th style="min-width: 150px;">Update:</th>
                 {% if request.user.is_staff %}
                 <th style="min-width: 150px;">Delete:</th>
                 {% endif %}
@@ -51,8 +51,8 @@
                     {% endfor %}
                 </td>
                 <td>{{ booking.date_booked_for }}</td>
-                <td>{{ booking.duration }}</td>
                 <td>{{ booking.approved }}</td>
+                <td><a href="{% url 'booking_update' booking.booking_id %}">Update</a></td>
                 {% if request.user.is_staff %}
                 <td><a href="{% url 'delete_booking' booking.booking_id %}">Delete</a></td>
                 {% endif %}

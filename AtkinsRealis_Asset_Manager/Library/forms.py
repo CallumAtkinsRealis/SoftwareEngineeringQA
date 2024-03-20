@@ -51,7 +51,7 @@ class AssetBookingForm(forms.ModelForm):
 
     class Meta:
         model = AssetBooking
-        fields = ['booked_by', 'asset_category', 'asset_name', 'project_name', 'project_number', 'project_manager', 'date_booked_for', 'date_to', 'duration', 'approved']
+        fields = ['booked_by', 'asset_category', 'asset_name', 'project_name', 'project_number', 'project_manager', 'date_booked_for', 'approved']
         widgets = {
             'date_booked_for': forms.DateInput(attrs={'class': 'form-control', 'id': 'datepicker'}),
             'date_to': forms.TextInput(attrs={'class': 'form-control', 'id': 'date_to'}),  # Changed to TextInput

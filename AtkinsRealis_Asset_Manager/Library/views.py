@@ -38,6 +38,22 @@ def login_request(request):
         form = LoginForm()
     return render(request, 'login_page.html', {'form': form})
 
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            with transaction.atomic():
+                custom_user = form.save()  # Save user in CustomUser model
+                # Create corresponding User object
+                #user = User.objects.create_user(username=custom_user.username, email=custom_user.email, password=form.cleaned_data['password'])
+                messages.success(request, 'User created successfully.')
+                return redirect('login')  # Redirect to login page on successful submission
+        else:
+            messages.error(request, 'Error creating user. Please check the form.')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'register.html', {'form': form, 'error_messages': messages.get_messages(request)})
+
 def authenticate_custom_user(email, password):
     try:
         user = CustomUser.objects.get(email=email)
@@ -115,7 +131,7 @@ def delete_user(request, email):
 @login_required
 def info(request):
     user = request.user
-    print(user)
+    #print(user)
     try:
         custom_user = CustomUser.objects.get(email=user)
         if request.method == 'POST':
@@ -133,6 +149,29 @@ def info(request):
         return redirect('home_page/')
 
     return render(request, 'user_info.html', {'form': form, 'error_messages': messages.get_messages(request)})
+
+def user_update(request, username):
+    user = get_object_or_404(CustomUser, email=username)
+    print(user)
+    #print(user)
+    try:
+        custom_user = CustomUser.objects.get(email=user)
+        if request.method == 'POST':
+            form = CustomUserForm(request.POST, instance=custom_user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'User information updated successfully.')
+                return redirect('usermanage')  # Redirect to the same page after successful update
+            else:
+                messages.error(request, 'Error updating user information. Please check the form.')
+        else:
+            form = CustomUserForm(instance=custom_user)  # Pass the user instance to prepopulate the form fields
+    except CustomUser.DoesNotExist:
+        messages.error(request, 'User not found.')
+        return redirect('usermanage')
+
+    return render(request, 'user_info.html', {'form': form, 'error_messages': messages.get_messages(request)})
+
 
 @login_required
 def bookingmanage(request):
@@ -160,6 +199,27 @@ def assetbooking(request):
         form = AssetBookingForm()
     return render(request, 'new_booking.html', {'form': form})
 
+def booking_update(request, booking_id):
+    booking = get_object_or_404(AssetBooking, booking_id=booking_id)
+    try:
+        existing_booking = AssetBooking.objects.get(booking_id=booking_id)
+        if request.method == 'POST':
+            form = AssetBookingForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Booking information updated successfully.')
+                return redirect('bookingmanage')  # Redirect to the same page after successful update
+            else:
+                messages.error(request, 'Error updating user information. Please check the form.')
+        else:
+            form = AssetBookingForm(instance=existing_booking)  # Pass the user instance to prepopulate the form fields
+    except AssetBooking.DoesNotExist:
+        messages.error(request, 'User not found.')
+        return redirect('home_page/')
+
+    return render(request, 'booking_info.html', {'form': form, 'error_messages': messages.get_messages(request)})
+
+
 @login_required
 def delete_booking(request, booking_id):
     # Get the booking object or return a 404 error if not found
@@ -171,5 +231,5 @@ def delete_booking(request, booking_id):
     # Now delete the user itself
     booking.delete()
     
-    return redirect('home')  # Redirect to a page that lists all users after deletion
+    return redirect('bookingmanage')  # Redirect to a page that lists all users after deletion
 

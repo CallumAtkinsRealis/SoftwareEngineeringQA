@@ -42,8 +42,12 @@
                 <input type="text" id="password_creation_date" name="password_creation_date" value="{{ form.instance.password_creation_date }}" readonly>
             </div>
             <div class="form-group">
-                <label for="is_staff_linked" class="form-label">Admin:</label>
-                <input type="checkbox" id="is_staff_linked" name="is_staff_linked" {% if form.instance.is_staff_linked %}checked{% endif %}>
+                <label for="is_active" class="form-label">Active Account:</label>
+                <input type="checkbox" id="is_active" name="is_active" {% if form.instance.is_active %}checked{% endif %}>
+            </div>
+            <div class="form-group">
+                <label for="is_staff" class="form-label">Admin:</label>
+                <input type="checkbox" id="is_staff" name="is_staff" {% if form.instance.is_staff %}checked{% endif %}>
             </div>
             <button type="submit">Update</button>
         </form>
