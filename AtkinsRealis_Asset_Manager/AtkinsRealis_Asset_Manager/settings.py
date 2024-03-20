@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-wof5b=6#j3j-juzg_gm!91u+j7-rkrqn%mzuhcab#c(jx*aara
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['softwareengineeringqa.onrender.com']
 
 # SESSION settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Session expires when the user closes the browser
