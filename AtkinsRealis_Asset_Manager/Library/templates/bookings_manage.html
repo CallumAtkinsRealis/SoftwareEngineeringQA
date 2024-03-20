@@ -1,0 +1,62 @@
+{% extends "master.html" %}
+
+<!DOCTYPE html>
+<html>
+    
+<head>
+    <title>{% block title_1 %}Booking's Manager{% endblock %}</title>
+</head>
+
+<body>
+    {% block content %}
+    <div class="button-container">
+        <li><a href="/new_booking/">Booking Manager</a></li>
+    </div>
+    <h1>Booking List</h1>
+        <table>
+            <tr>
+                <th style="min-width: 150px;">Booking ID:</th>
+                <th style="min-width: 150px;">Booked By:</th>
+                <th style="min-width: 150px;">Asset Category:</th>
+                <th style="min-width: 150px;">Asset Name:</th>
+                <th style="min-width: 150px;">Asset ID:</th>
+                <th style="min-width: 250px;">Project Name:</th>
+                <th style="min-width: 200px;">Project Manager:</th>
+                <th style="min-width: 150px;">Date Booked For:</th>
+                <th style="min-width: 150px;">Duration:</th>
+                <th style="min-width: 150px;">Approved:</th>
+                {% if request.user.is_staff %}
+                <th style="min-width: 150px;">Delete:</th>
+                {% endif %}
+            </tr>
+        {% for booking in mybookings %}
+            <tr>
+                <td>{{ booking.booking_id }}</td>
+                <td>
+                    {% for user in myusers %}
+                        {% if user.id == booking.booked_by_id %}
+                            {{ user.username }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ booking.asset_category }}</td>
+                <td>{{ booking.asset_name }}</td>
+                <td>{{ booking.asset_id }}</td>
+                <td>{{ booking.project_name }}</td>
+                <td>
+                    {% for user in myusers %}
+                        {% if user.id == booking.project_manager_id %}
+                            {{ user.username }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ booking.date_booked_for }}</td>
+                <td>{{ booking.duration }}</td>
+                <td>{{ booking.approved }}</td>
+                {% if request.user.is_staff %}
+                <td><a href="{% url 'delete_booking' booking.booking_id %}">Delete</a></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    {% endblock %}
+</body>

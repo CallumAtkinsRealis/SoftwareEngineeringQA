@@ -3,8 +3,9 @@ from django.contrib.auth.models import Group, Permission
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 
-User = get_user_model()
+#User = get_user_model()
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -17,11 +18,11 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_staff_linked', True)
         extra_fields.setdefault('is_superuser', True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_staff_linked') is not True:
+            raise ValueError('Superuser must have is_staff_linked=True.')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
@@ -41,8 +42,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     groups = models.ManyToManyField(Group, related_name='custom_users')
     user_permissions = models.ManyToManyField(Permission, related_name='custom_users')
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['username', 'firstname', 'lastname', 'job_title']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['firstname', 'lastname', 'job_title']
 
     objects = CustomUserManager()
 
@@ -66,21 +67,27 @@ class AssetBooking(models.Model):
     )
 
     booking_id = models.AutoField(primary_key=True)
-    booked_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings_as_booked_by')
+    booked_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='bookings_as_booked_by')
     asset_category = models.CharField(max_length=3, choices=BOOKING_ID_CHOICES)
-    asset_name = models.CharField(max_length=100)  # You can further restrict choices dynamically based on asset category
-    asset_id = models.CharField(max_length=100)  # This will be automatically filled later
+    asset_name = models.CharField(max_length=100)
+    asset_id = models.CharField(max_length=100)
     project_name = models.CharField(max_length=255)
     project_number = models.CharField(max_length=20)
-    project_manager = models.ForeignKey(User, on_delete=models.CASCADE)
+    project_manager = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     date_booked_for = models.DateField()
     duration = models.CharField(max_length=2, choices=DURATION_CHOICES)
+    date_to = models.DateField(blank=True, null=True)  # New field for end date, blank and null allowed
     approved = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         # Logic to automatically fill asset_id based on the selected asset category and name
-        # This will be implemented based on your specific requirements
+        if not self.asset_id:  # Only fill if not already set
+            self.asset_id = f"{self.asset_category}-{self.asset_name}"  # Example logic, adjust as needed
         super().save(*args, **kwargs)
+
+    def clean(self):
+        if self.duration == 'MD' and not self.date_to:
+            raise ValidationError("For multiple days duration, 'date_to' field is required.")
 
     def __str__(self):
         return f"Booking ID: {self.booking_id}, Asset: {self.asset_name}, Project: {self.project_name}"

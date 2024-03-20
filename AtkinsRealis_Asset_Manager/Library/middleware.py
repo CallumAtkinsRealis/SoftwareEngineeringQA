@@ -1,32 +1,15 @@
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.http import HttpResponseRedirect
 
-class AuthRequiredMiddleware:
+class InvalidURLMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        # Check if the user is authenticated
-        if not request.user.is_authenticated:
-            # If not authenticated, redirect to the login page
-            return redirect(reverse('login'))  # Assuming your login URL name is 'login'
-        
-        # If authenticated, continue with the request
         response = self.get_response(request)
-        return response
-    
-class SessionExpiredMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        # Check if the user is authenticated and the session has expired
-        if request.user.is_authenticated and '_session_expiry' in request.session:
-            session_expiry = request.session['_session_expiry']
-            if session_expiry < timezone.now():
-                # Session has expired, redirect to the login page
-                return redirect(reverse('login'))  # Assuming your login URL name is 'login'
-        
-        response = self.get_response(request)
+        if response.status_code == 404:  # Check if the response status is 404 (Page Not Found)
+            # Redirect to your specific page
+            return HttpResponseRedirect(reverse('home'))  # 'invalid-url-page' should be replaced with the name of your URL pattern for the specific page
         return response

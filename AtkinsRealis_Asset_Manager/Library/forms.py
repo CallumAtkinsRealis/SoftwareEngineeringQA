@@ -1,5 +1,6 @@
 from django import forms
 from .models import CustomUser, AssetBooking
+from django.contrib.auth import get_user_model
 
 class CustomUserForm(forms.ModelForm):
     class Meta:
@@ -19,6 +20,10 @@ class CustomUserForm(forms.ModelForm):
         cleaned_data = super().clean()
         # Add custom validation logic if needed
         return cleaned_data
+    
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=100)
+    password = forms.CharField(widget=forms.PasswordInput())
     
 class CustomUserCreationForm(forms.ModelForm):
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -41,6 +46,13 @@ class CustomUserCreationForm(forms.ModelForm):
         return user
     
 class AssetBookingForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AssetBookingForm, self).__init__(*args, **kwargs)
+
     class Meta:
         model = AssetBooking
-        fields = ['booked_by', 'asset_category', 'asset_name', 'project_name', 'project_number', 'project_manager', 'date_booked_for', 'duration', 'approved']
+        fields = ['booked_by', 'asset_category', 'asset_name', 'project_name', 'project_number', 'project_manager', 'date_booked_for', 'date_to', 'duration', 'approved']
+        widgets = {
+            'date_booked_for': forms.DateInput(attrs={'class': 'form-control', 'id': 'datepicker'}),
+            'date_to': forms.TextInput(attrs={'class': 'form-control', 'id': 'date_to'}),  # Changed to TextInput
+        }

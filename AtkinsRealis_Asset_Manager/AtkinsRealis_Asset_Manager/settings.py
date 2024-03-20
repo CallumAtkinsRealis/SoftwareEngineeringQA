@@ -27,7 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-##SESSION_COOKIE_AGE = 60
+# SESSION settings
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Session expires when the user closes the browser
+SESSION_COOKIE_AGE = 3600 # Session expires after 1 hour (3600 seconds)
 
 LOGIN_URL = '../login/'
 
@@ -47,6 +49,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'Library.middleware.InvalidURLMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -102,6 +105,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',  # Provides bcrypt with SHA-256 hashing
+    'django.contrib.auth.hashers.BCryptPasswordHasher',  # Provides bcrypt with SHA-256 hashing (fallback)
+    'django.contrib.auth.hashers.SHA1PasswordHasher',  # Not recommended for production use
+    'django.contrib.auth.hashers.MD5PasswordHasher',  # Not recommended for production use
+]
+
+#this sets my CustomUser model as the Auth model
+
+AUTH_USER_MODEL = 'Library.CustomUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
