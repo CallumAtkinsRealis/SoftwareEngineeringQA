@@ -5,9 +5,8 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
-#User = get_user_model()
-
 class CustomUserManager(BaseUserManager):
+    # Custom user manager model
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError('The Email field must be set')
@@ -29,6 +28,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    # Custom inputs for User
     username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True)
     firstname = models.CharField(max_length=255)
@@ -51,7 +51,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 class AssetBooking(models.Model):
-
+    #  Asset Booking Model
+    # Options for asset_category
     BOOKING_ID_CHOICES = (
         ('CAM', 'Camera'),
         ('LAS', 'Laser Scanner'),
@@ -60,6 +61,7 @@ class AssetBooking(models.Model):
         ('ROB', 'Robot'),
     )
 
+    # Custom inputs for bookings
     booking_id = models.AutoField(primary_key=True)
     booked_by = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, related_name='bookings_as_booked_by', null=True, default='')
     asset_category = models.CharField(max_length=3, choices=BOOKING_ID_CHOICES)

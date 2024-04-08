@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 from .models import AssetBooking, CustomUser
 
 class AssetBookingForm(forms.ModelForm):
+    #Form for Asset Booking
     def __init__(self, *args, **kwargs):
         super(AssetBookingForm, self).__init__(*args, **kwargs)
 
@@ -46,6 +47,7 @@ class CustomUserCreationForm(forms.ModelForm):
         return user
 
 class CustomUserForm(forms.ModelForm):
+    #Form for user update
     password = forms.CharField(widget=forms.PasswordInput(), required=False)
 
     class Meta:
@@ -71,7 +73,7 @@ class CustomUserForm(forms.ModelForm):
             user.save()
         return user
 
-
 class LoginForm(forms.Form):
+    #Log In form options
     username = forms.CharField(max_length=100)
     password = forms.CharField(widget=forms.PasswordInput())
