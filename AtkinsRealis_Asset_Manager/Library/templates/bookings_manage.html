@@ -10,7 +10,7 @@
 <body>
     {% block content %}
     <div class="button-container1">
-        <a href="/new_booking/" class="button">Booking Manager</a>
+        <a href="/new_booking/" class="button">New Booking</a>
     </div>
     <h1>Booking List</h1>
         <table>
@@ -50,11 +50,21 @@
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td>{{ booking.date_booked_for }}</td>
+                <td>{{ booking.date_booked_for }}
                 <td>{{ booking.approved }}</td>
-                <td><a href="{% url 'booking_update' booking.booking_id %}">Update</a></td>
+                <td>
+                    <form action="{% url 'booking_update' booking.booking_id %}">
+                        {% csrf_token %}
+                        <button type="submit">Update</button>
+                    </form>
+                </td>
                 {% if request.user.is_staff %}
-                <td><a href="{% url 'delete_booking' booking.booking_id %}">Delete</a></td>
+                <td>
+                    <form method="post" action="{% url 'delete_booking' booking.booking_id %}">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
                 {% endif %}
             </tr>
         {% endfor %}

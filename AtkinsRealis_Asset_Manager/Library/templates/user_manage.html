@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html>
-    
+
 <head>
     <title>{% block title_1 %}Manage Users{% endblock %}</title>
 </head>
@@ -11,39 +11,52 @@
     {% block content %}
     <div class="button-container1">
         <a href="/user_info/" class="button">User Info</a>
-        <a href="/create_user/"class="button button-secondary">Create User</a>
+        <a href="/create_user/" class="button button-secondary">Create User</a>
     </div>
     <h1>User List</h1>
-        <table>
-            <tr>
-                <th style="min-width: 150px;">User ID:</th>
-                <th style="min-width: 150px;">First Name:</th>
-                <th style="min-width: 150px;">Last Name:</th>
-                <th style="min-width: 150px;">Username:</th>
-                <th style="min-width: 250px;">Email:</th>
-                <th style="min-width: 150px;">Password:</th>
-                <th style="min-width: 200px;">Password Creation Date:</th>
-                <th style="min-width: 150px;">Job Title:</th>
-                <th style="min-width: 150px;">Update:</th>
-                {% if request.user.is_staff %}
-                <th style="min-width: 150px;">Delete:</th>
-                {% endif %}
-            </tr>
-    {% for x in myusers %}
-            <tr>
-                <td>{{ x.id }}</td>
-                <td>{{ x.firstname }}</td>
-                <td>{{ x.lastname }}</td>
-                <td>{{ x.username }}</td>
-                <td>{{ x.email }}</td>
-                <td>{{ x.password }}</td>
-                <td>{{ x.password_creation_date }}</td>
-                <td>{{ x.job_title }}</td>
-                <td><a href="{% url 'user_update' x.email %}">Update</a></td>
-                {% if request.user.is_staff %}
-                <td><a href="{% url 'delete_user' x.email %}">Delete</a></td>
-                {% endif %}
-            </tr>
-            {% endfor %}
+    <table>
+        <tr>
+            <th style="min-width: 150px;">User ID:</th>
+            <th style="min-width: 150px;">First Name:</th>
+            <th style="min-width: 150px;">Last Name:</th>
+            <th style="min-width: 150px;">Username:</th>
+            <th style="min-width: 250px;">Email:</th>
+            <th style="min-width: 150px;">Password:</th>
+            <th style="min-width: 200px;">Password Creation Date:</th>
+            <th style="min-width: 150px;">Job Title:</th>
+            {% if request.user.is_staff %}
+            <th style="min-width: 150px;">Update:</th>
+            <th style="min-width: 150px;">Delete:</th>
+            {% endif %}
+        </tr>
+        {% for x in myusers %}
+        <tr>
+            <td>{{ x.id }}</td>
+            <td>{{ x.firstname }}</td>
+            <td>{{ x.lastname }}</td>
+            <td>{{ x.username }}</td>
+            <td>{{ x.email }}</td>
+            <td>{{ x.password }}</td>
+            <td>{{ x.password_creation_date }}</td>
+            <td>{{ x.job_title }}</td>
+            {% if request.user.is_staff %}
+            <td>
+                <form action="{% url 'user_update' x.email %}">
+                    {% csrf_token %}
+                    <button type="submit">Update</button>
+                </form>
+            </td>
+            <td>
+                <form method="post" action="{% url 'delete_user' x.email %}">
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
     {% endblock %}
 </body>
+
+</html>

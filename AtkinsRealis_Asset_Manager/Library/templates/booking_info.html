@@ -34,14 +34,18 @@
                 {{ form.project_manager }}
             </div>
             <div class="form-group">
-                <label for="id_date_booked_for" class="form-label">Date Booked For:</label>
+                <label for="id_date_booked_for" class="form-label">Date Booked For (YYYY-MM-DD):</label>
                 {{ form.date_booked_for }}
             </div>
+            {% if request.user.is_staff %}
             <div class="form-group">
                 <label for="id_approved" class="form-label">Approved:</label>
                 {{ form.approved }}
             </div>
+            {% endif %}
             <button type="submit" class="btn btn-primary">Update Booking</button>
+            <div class="form-group"></div>
+            <button type="button" onclick="goBack()">Go Back</button>
         </form>
         <div id="error-message" class="error-message" style="display: none;"></div>
     </div>

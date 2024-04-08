@@ -5,17 +5,20 @@
         <h1>User Information</h1>
         <form method="post" class="forms">
             {% csrf_token %}
+            <div class="form-group"></div>
             {% if form.errors %}
                 <div class="error-message">
                     Please correct the errors below.
                 </div>
             {% endif %}
+            <div class="form-group"></div>
             {% if messages %}
                 {% for message in messages %}
                     <div class="success-message">
                         {{ message }}
                     </div>
                 {% endfor %}
+                <div class="form-group"></div>
             {% endif %}
             <div class="form-group">
                 <label for="email" class="form-label">Email:</label>
@@ -42,14 +45,22 @@
                 <input type="text" id="password_creation_date" name="password_creation_date" value="{{ form.instance.password_creation_date }}" readonly>
             </div>
             <div class="form-group">
-                <label for="is_active" class="form-label">Active Account:</label>
+                <label for="password" class="form-label">Password:</label>
+                <input type="text" id="password" name="password">
+            </div>
+            <div class="form-group" style="display: none;">
+                <label for="is_active" class="form-label">is_active:</label>
                 <input type="checkbox" id="is_active" name="is_active" {% if form.instance.is_active %}checked{% endif %}>
             </div>
+            {% if request.user.is_staff %}
             <div class="form-group">
                 <label for="is_staff" class="form-label">Admin:</label>
                 <input type="checkbox" id="is_staff" name="is_staff" {% if form.instance.is_staff %}checked{% endif %}>
             </div>
+            {% endif %}
             <button type="submit">Update</button>
+            <div class="form-group"></div>
+            <button type="button" onclick="goBack()">Go Back</button>
         </form>
         <div class="error-message" style="display: none;"></div>
     </div>

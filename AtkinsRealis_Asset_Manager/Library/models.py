@@ -18,10 +18,10 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff_linked', True)
+        extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
-        if extra_fields.get('is_staff_linked') is not True:
+        if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff_linked=True.')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
@@ -61,13 +61,13 @@ class AssetBooking(models.Model):
     )
 
     booking_id = models.AutoField(primary_key=True)
-    booked_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='bookings_as_booked_by')
+    booked_by = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, related_name='bookings_as_booked_by', null=True, default='')
     asset_category = models.CharField(max_length=3, choices=BOOKING_ID_CHOICES)
     asset_name = models.CharField(max_length=100)
     asset_id = models.CharField(max_length=100)
     project_name = models.CharField(max_length=255)
     project_number = models.CharField(max_length=20)
-    project_manager = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
+    project_manager = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, null=True, default='')
     date_booked_for = models.DateField()
     approved = models.BooleanField(default=False)
 

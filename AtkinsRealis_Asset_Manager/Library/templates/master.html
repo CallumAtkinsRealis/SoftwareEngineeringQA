@@ -34,7 +34,7 @@
             font-size: 30px; /* Adjust the font size as needed */
             font-weight: bold;
             margin-left: 20px; /* Add some margin to separate from left edge */
-}
+        }
 
         .logo {
             max-height: 50px; /* Adjust the height as needed */
@@ -57,7 +57,6 @@
             text-decoration: none; /* Remove underline */
         }
 
-    
         .container {
         text-align: center; /* Center align the container content */
         }
@@ -103,6 +102,21 @@
         }
 
         button[type="submit"]:hover {
+            background-color: #192d38; /* Darken button color on hover */
+            width: 100%
+        }
+
+        button[type="button"] {
+            width: 100%; /* Make the button fill its parent container */
+            padding: 10px; /* Adjust padding as needed */
+            background-color: #192d38; /* Set button background color */
+            color: #fff; /* Set button text color */
+            border: none; /* Remove button border */
+            border-radius: 4px; /* Round the corners of the button */
+            cursor: pointer; /* Add pointer cursor on hover */
+        }
+
+        button[type="button"]:hover {
             background-color: #192d38; /* Darken button color on hover */
             width: 100%
         }
@@ -220,5 +234,9 @@
     document.getElementById('id_duration').addEventListener('change', function() {
         check_duration(this.value);
     });
+
+    function goBack() {
+            window.history.back();
+        }
 </script>
 </html>
