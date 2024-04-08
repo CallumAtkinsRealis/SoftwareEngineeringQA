@@ -39,7 +39,7 @@ def user_page(request):
 
 @login_required
 def create_user(request):
-    # checks the form submitted on the create_user_user page
+    # checks the form submitted on the create_user page
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():

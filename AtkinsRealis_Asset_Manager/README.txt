@@ -17,7 +17,9 @@ various features of the application.
 
 1. Clone this repository to your local machine:
     ```bash
-    git clone https://github.com/your-username/your-repository.git
+    git clone https://github.com/CallumAtkinsRealis/SoftwareEngineeringQA.git
+
+    For the Software Engineering and Agile, please download from the Canvas page.
 
 2. Set up a virtual environment (recommended) and activate it:
     python3 -m venv venv
