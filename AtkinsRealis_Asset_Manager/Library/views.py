@@ -145,12 +145,13 @@ def bookingmanage(request):
 
 @login_required
 def assetbooking(request):
+    # Renders the assetbooking FORM to bookingmanage URL
     if request.method == 'POST':
         form = AssetBookingForm(request.POST)
         if form.is_valid():
             messages.success(request, 'New booking created successfully.')
             form.save()
-            # Redirect to a success URL or render a success message
+            # Redirect to bookingmanage URL
             return redirect('bookingmanage')
         else:
             messages.error(request, 'Error creating new booking. Please check the form.')
@@ -161,8 +162,10 @@ def assetbooking(request):
 
 @login_required
 def booking_update(request, booking_id):
+    # Renders the booking update page
     existing_booking = get_object_or_404(AssetBooking, booking_id=booking_id)
 
+    # checks the submitted form
     if request.method == 'POST':
         form = AssetBookingForm(request.POST, instance=existing_booking)
         if form.is_valid():
@@ -179,6 +182,8 @@ def booking_update(request, booking_id):
 
 @login_required
 def delete_booking(request, booking_id):
+    # Renders the booking delete action
+    # checks to see if the user is_staff and has permissions to delete booking
     if not request.user.is_staff:
         messages.error(request, 'Sorry, you do not have permissions to do that.')
         return redirect('bookingmanage')
@@ -197,6 +202,7 @@ def delete_booking(request, booking_id):
     return redirect('bookingmanage')
 
 def login_request(request):
+    # Renders the log in request page
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -221,6 +227,7 @@ def login_request(request):
     return render(request, 'login_page.html', {'form': form})
 
 def register(request):
+    # Renders the register page
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
@@ -235,6 +242,7 @@ def register(request):
     return render(request, 'register.html', {'form': form, 'error_messages': messages.get_messages(request)})
 
 def authenticate_custom_user(email, password):
+    # function for authenticating custom user
     try:
         user = CustomUser.objects.get(email=email)
         if user.check_password(password):
