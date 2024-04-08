@@ -1,0 +1,52 @@
+{% extends "master.html" %}
+
+{% block title_1 %}
+    Modify Booking
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Modify Existing Booking</h2>
+        <form method="post" class="forms">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_booked_by" class="form-label">Booked By:</label>
+                {{ form.booked_by }}
+            </div>
+            <div class="form-group">
+                <label for="id_asset_category" class="form-label">Asset Category:</label>
+                {{ form.asset_category }}
+            </div>
+            <div class="form-group">
+                <label for="id_asset_name" class="form-label">Asset Name:</label>
+                {{ form.asset_name }}
+            </div>
+            <div class="form-group">
+                <label for="id_project_name" class="form-label">Project Name:</label>
+                {{ form.project_name }}
+            </div>
+            <div class="form-group">
+                <label for="id_project_number" class="form-label">Project Number:</label>
+                {{ form.project_number }}
+            </div>
+            <div class="form-group">
+                <label for="id_project_manager" class="form-label">Project Manager:</label>
+                {{ form.project_manager }}
+            </div>
+            <div class="form-group">
+                <label for="id_date_booked_for" class="form-label">Date Booked For (YYYY-MM-DD):</label>
+                {{ form.date_booked_for }}
+            </div>
+            {% if request.user.is_staff %}
+            <div class="form-group">
+                <label for="id_approved" class="form-label">Approved:</label>
+                {{ form.approved }}
+            </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Update Booking</button>
+            <div class="form-group"></div>
+            <button type="button" onclick="goBack()">Go Back</button>
+        </form>
+        <div id="error-message" class="error-message" style="display: none;"></div>
+    </div>
+{% endblock %}

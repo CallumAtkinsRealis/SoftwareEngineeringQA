@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AtkinsRéalis Asset Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif; /* Apply Arial font to all text */
+        }
+        /* Header Styles */
+        .header {
+            font-size: 15px;
+            background-color: #192d38; /* Dark Grey */
+            color: #fff; /* White text */
+            padding: 15px; /* Add some padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .table, tr, th, td {
+            width: 100px; /* Set your desired fixed width */
+            table-layout: fixed;
+            border: 1px solid black;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 0 auto;
+        }
+
+        .logo-text {
+            font-size: 30px; /* Adjust the font size as needed */
+            font-weight: bold;
+            margin-left: 20px; /* Add some margin to separate from left edge */
+        }
+
+        .logo {
+            max-height: 50px; /* Adjust the height as needed */
+            margin-right: 20px; /* Add some margin to separate from title */
+        }
+
+        .nav-links {
+            list-style-type: none; /* Remove bullet points */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-right: 15px; /* Add some space between each link */
+        }
+
+        .nav-links li a {
+            color: #fff; /* White text */
+            text-decoration: none; /* Remove underline */
+        }
+
+        .container {
+        text-align: center; /* Center align the container content */
+        }
+
+        .forms {
+            max-width: 400px; /* Set maximum width for the form */
+            margin: auto; /* Center the form horizontally */
+            text-align: left; /* Reset text alignment inside the form */
+        }
+
+        .form-group {
+            margin-bottom: 15px; /* Add space between form groups */
+        }
+
+        .form-label {
+            display: block; /* Ensure labels are displayed on separate lines */
+            margin-bottom: 5px; /* Add space between labels and inputs */
+        }
+
+        .forms input[type="text"],
+        .forms select,
+        .forms textarea {
+            width: calc(100% - 16px); /* Make inputs fill their parent container minus padding and border */
+            padding: 8px; /* Adjust padding as needed */
+            border: 1px solid #ccc; /* Add a border for clarity */
+            border-radius: 4px; /* Round the corners of inputs */
+            box-sizing: border-box; /* Include padding and border in width calculation */
+        }
+
+        .welcome-message {
+            text-align: center;
+            margin-top: 50px; /* Adjust as needed */
+        }
+
+        button[type="submit"] {
+            width: 100%; /* Make the button fill its parent container */
+            padding: 10px; /* Adjust padding as needed */
+            background-color: #192d38; /* Set button background color */
+            color: #fff; /* Set button text color */
+            border: none; /* Remove button border */
+            border-radius: 4px; /* Round the corners of the button */
+            cursor: pointer; /* Add pointer cursor on hover */
+        }
+
+        button[type="submit"]:hover {
+            background-color: #192d38; /* Darken button color on hover */
+            width: 100%
+        }
+
+        button[type="button"] {
+            width: 100%; /* Make the button fill its parent container */
+            padding: 10px; /* Adjust padding as needed */
+            background-color: #192d38; /* Set button background color */
+            color: #fff; /* Set button text color */
+            border: none; /* Remove button border */
+            border-radius: 4px; /* Round the corners of the button */
+            cursor: pointer; /* Add pointer cursor on hover */
+        }
+
+        button[type="button"]:hover {
+            background-color: #192d38; /* Darken button color on hover */
+            width: 100%
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .button-container1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #192d38;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.25);
+            transition: background-color 0.3s ease;
+        }
+        
+        .button:hover {
+            background-color: #0056b3;
+        }
+        
+        .button-secondary {
+            background-color: #6c757d;
+        }
+        
+        .button-secondary:hover {
+            background-color: #495057;
+        }
+
+        .error-message {
+            color: red; /* Set color for error messages */
+            margin-top: 10px; /* Add space above error messages */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-text">AtkinsRéalis Asset Manager</div>
+        <div>
+        <h1>{% block title_1 %}Page Title{% endblock %}</h1>
+    </div>
+    {% if request.user.is_authenticated %}
+    <p>Welcome, {{ request.user.username }}</p>
+    {% endif %}
+    <div>
+        <ul class="nav-links">
+            {% if request.user.is_authenticated %}
+            <li><a href="/logout/">Log Out</a></li>
+            <li><a href="/home_page/">Home</a></li>
+            <li><a href="/user_manage/">User Manager</a></li>
+            <li><a href="/booking_page/">Booking Manager</a></li>
+            {% else %}
+                <li><a href="/login/">Log In</a></li>
+                <li><a href="/register/">Register</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+<div class="content">
+    {% if messages %}
+    <div style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+      <ul class="messages" style="list-style-type: none; padding: 0;">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+    {% block content %}
+    <!-- Your content goes here -->
+    {% endblock %}
+</body>
+<script>
+    function check_duration(value) {
+        var dateToGroup = document.getElementById('id_date_to_group');
+        if (value === 'MD') {
+            dateToGroup.style.display = 'block';
+        } else {
+            dateToGroup.style.display = 'none';
+        }
+    }
+
+    // Call the check_duration function initially to set the initial state
+    check_duration(document.getElementById('id_duration').value);
+    
+    // Add event listener to duration field for onchange event
+    document.getElementById('id_duration').addEventListener('change', function() {
+        check_duration(this.value);
+    });
+
+    function goBack() {
+            window.history.back();
+        }
+</script>
+</html>

@@ -1,0 +1,21 @@
+{% extends "master.html" %}
+
+<!DOCTYPE html>
+<html>
+    
+<head>
+    <title>{% block title_1 %}Home Page{% endblock %}</title>
+</head>
+
+<body>
+    {% block content %}
+    <div class="welcome-message">
+        <h1>Welcome to the Atkinséalis Asset Booking System</h1>
+        <p>Please select an option below:</p>
+    </div>  
+    <div class="button-container">
+        <a href="/user_manage/" class="button">User Manager</a>
+        <a href="/booking_page/" class="button button-secondary">Asset Booking</a>
+    </div>
+    {% endblock %}
+</body>

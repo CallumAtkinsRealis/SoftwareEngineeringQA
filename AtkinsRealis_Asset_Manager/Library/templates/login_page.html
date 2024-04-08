@@ -1,0 +1,29 @@
+{% extends "master.html" %}
+
+<!DOCTYPE html>
+<html>
+    
+<head>
+    <title>{% block title_1 %}Login Page{% endblock %}</title>
+</head>
+
+
+{% block content %}
+<body>
+    {% if error_message %}
+        <p>{{ error_message }}</p>
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <h2>Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="id_username">Email</label>
+            {{ form.username }}
+            <label for="id_password">Password:</label>
+            {{ form.password }}
+            <input type="submit" value="Login">
+    </form>
+</body>
+{% endblock %}
+</html>

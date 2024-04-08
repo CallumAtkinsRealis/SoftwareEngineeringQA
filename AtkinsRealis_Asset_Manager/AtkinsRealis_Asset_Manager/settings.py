@@ -20,13 +20,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-oyhqn4v=vs!pgg9csd%35s!e*e8mka89fj8$co+@$h^&x34u54'
+SECRET_KEY = 'django-insecure-wof5b=6#j3j-juzg_gm!91u+j7-rkrqn%mzuhcab#c(jx*aara'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
+# SESSION settings
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Session expires when the user closes the browser
+SESSION_COOKIE_AGE = 3600 # Session expires after 1 hour (3600 seconds)
+
+LOGIN_URL = '../login/'
 
 # Application definition
 
@@ -37,14 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'home'
+    'Library',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'Library.middleware.InvalidURLMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -100,6 +105,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',  # Provides bcrypt with SHA-256 hashing
+    'django.contrib.auth.hashers.BCryptPasswordHasher',  # Provides bcrypt with SHA-256 hashing (fallback)
+    'django.contrib.auth.hashers.SHA1PasswordHasher',  # Not recommended for production use
+    'django.contrib.auth.hashers.MD5PasswordHasher',  # Not recommended for production use
+]
+
+#this sets my CustomUser model as the Auth model
+
+AUTH_USER_MODEL = 'Library.CustomUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -122,3 +138,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_COOKIE_SECURE = True  # Set to True if using HTTPS
+CSRF_COOKIE_HTTPONLY = True  # Set to True for additional security
