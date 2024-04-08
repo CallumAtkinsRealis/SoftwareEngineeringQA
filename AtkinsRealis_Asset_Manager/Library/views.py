@@ -23,7 +23,7 @@ def home(request):
     return render(request, "home.html")
 
 @login_required
-def usermanage(request):
+def user_page(request):
     # Fetch all users from CustomUser model
     myusers = CustomUser.objects.all().values()
 
@@ -34,12 +34,12 @@ def usermanage(request):
     context = { 
             "myusers" : myusers,
         } 
-    # Renders usermanage page with all users
+    # Renders user_page page with all users
     return render(request, "user_manage.html", context)
 
 @login_required
-def create(request):
-    # checks the form submitted on the create_user page
+def create_user(request):
+    # checks the form submitted on the create_user_user page
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
@@ -47,8 +47,8 @@ def create(request):
                 #Save User in CustomUser Model
                 CustomUserSave = form.save()
                 messages.success(request, 'User created successfully.')
-                # Redirect to usermanage on successful submission
-                return redirect('usermanage')
+                # Redirect to user_page on successful submission
+                return redirect('user_page')
         else:
             messages.error(request, 'Error creating user. Please check the form.')
     else:
@@ -61,7 +61,7 @@ def delete_user(request, email):
     # Checks to see if the user is_staff and can delete the user
     if not request.user.is_staff:
         messages.error(request, 'Sorry, you do not have permissions to do that.')
-        return redirect('usermanage')
+        return redirect('user_page')
     
     # Get the user object or return a 404 error if not found
     user = get_object_or_404(CustomUser, email=email)
@@ -81,10 +81,10 @@ def delete_user(request, email):
     else:
         messages.error(request, 'Invalid request method.')
     
-    return redirect('usermanage')  # Redirect to a page that lists all users after deletion
+    return redirect('user_page')  # Redirect to a page that lists all users after deletion
 
 @login_required
-def info(request):
+def user_info(request):
     # renders the user page 
     user = request.user
     try:
@@ -94,14 +94,14 @@ def info(request):
             if form.is_valid():
                 form.save()
                 messages.success(request, 'User information updated successfully.')
-                return redirect('usermanage')  # Redirect to the same page after successful update
+                return redirect('user_page')  # Redirect to the same page after successful update
             else:
                 messages.error(request, 'Error updating user information. Please check the form.')
         else:
             form = CustomUserForm(instance=custom_user)  # Pass the user instance to prepopulate the form fields
     except CustomUser.DoesNotExist:
         messages.error(request, 'User not found.')
-        return redirect('usermanage')
+        return redirect('user_page')
 
     return render(request, 'user_info.html', {'form': form, 'error_messages': messages.get_messages(request)})
 
@@ -110,7 +110,7 @@ def user_update(request, username):
         # Checks to see if the user is_staff and can update the user
     if not request.user.is_staff:
         messages.error(request, 'Sorry, you do not have permissions to do that.')
-        return redirect('usermanage')
+        return redirect('user_page')
     
     # Get the user object or return a 404 error if not found
     user = get_object_or_404(CustomUser, email=username)
@@ -123,7 +123,7 @@ def user_update(request, username):
                 form.cleaned_data.pop('password')  # Remove the password field from cleaned data
             form.save()
             messages.success(request, 'User information updated successfully.')
-            return redirect('usermanage')  # Redirect to the same page after successful update
+            return redirect('user_page')  # Redirect to the same page after successful update
         else:
             messages.error(request, 'Error updating user information. Please check the form.')
     else:
@@ -132,7 +132,7 @@ def user_update(request, username):
     return render(request, 'user_info.html', {'form': form, 'error_messages': messages.get_messages(request)})
 
 @login_required
-def bookingmanage(request):
+def booking_page(request):
     # Fetch all bookings from CustomUser model
     mybookings = AssetBooking.objects.all().values()
     myusers = CustomUser.objects.all().values()
@@ -144,15 +144,15 @@ def bookingmanage(request):
     return render(request, "bookings_manage.html", context)
 
 @login_required
-def assetbooking(request):
-    # Renders the assetbooking FORM to bookingmanage URL
+def create_booking(request):
+    # Renders the create_booking FORM to booking_page URL
     if request.method == 'POST':
         form = AssetBookingForm(request.POST)
         if form.is_valid():
             messages.success(request, 'New booking created successfully.')
             form.save()
-            # Redirect to bookingmanage URL
-            return redirect('bookingmanage')
+            # Redirect to booking_page URL
+            return redirect('booking_page')
         else:
             messages.error(request, 'Error creating new booking. Please check the form.')
             print("Form is invalid:", form.errors)  # Print form errors for debugging
@@ -171,7 +171,7 @@ def booking_update(request, booking_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Booking information updated successfully.')
-            return redirect('bookingmanage')  # Redirect to the same page after successful update
+            return redirect('booking_page')  # Redirect to the same page after successful update
         else:
             messages.error(request, 'Error updating booking information. Please check the form.')
     else:
@@ -179,14 +179,13 @@ def booking_update(request, booking_id):
 
     return render(request, 'booking_info.html', {'form': form, 'error_messages': messages.get_messages(request)})
 
-
 @login_required
-def delete_booking(request, booking_id):
+def booking_delete(request, booking_id):
     # Renders the booking delete action
     # checks to see if the user is_staff and has permissions to delete booking
     if not request.user.is_staff:
         messages.error(request, 'Sorry, you do not have permissions to do that.')
-        return redirect('bookingmanage')
+        return redirect('booking_page')
     
     # Get the booking object or return a 404 error if not found
     booking = get_object_or_404(AssetBooking, booking_id=booking_id)
@@ -199,7 +198,7 @@ def delete_booking(request, booking_id):
     else:
         messages.error(request, 'Invalid request method.')
     
-    return redirect('bookingmanage')
+    return redirect('booking_page')
 
 def login_request(request):
     # Renders the log in request page

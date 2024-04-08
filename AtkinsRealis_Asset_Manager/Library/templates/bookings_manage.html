@@ -60,7 +60,7 @@
                 </td>
                 {% if request.user.is_staff %}
                 <td>
-                    <form method="post" action="{% url 'delete_booking' booking.booking_id %}">
+                    <form method="post" action="{% url 'booking_delete' booking.booking_id %}">
                         {% csrf_token %}
                         <button type="submit">Delete</button>
                     </form>
