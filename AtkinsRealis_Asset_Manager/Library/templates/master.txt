@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AtkinsRéalis Asset Manager</title>
+    <style>
+        body, html {
+            font-family: Arial, sans-serif; /* Apply Arial font to all text */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .content {
+            margin-top: 20px; /* Add some margin to create space below the nav-bar */
+            padding: 20px; /* Add some padding if needed */
+            flex: 1;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        /* Header Styles */
+        .header {
+            font-size: 15px;
+            background-color: #192d38; /* Dark Grey */
+            color: #fff; /* White text */
+            padding: 15px; /* Add some padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .table, tr, th, td {
+            width: 100px; /* Set your desired fixed width */
+            table-layout: fixed;
+            border: 1px solid black;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 0 auto;
+        }
+
+        .logo-text {
+            font-size: 30px; /* Adjust the font size as needed */
+            font-weight: bold;
+            margin-left: 20px; /* Add some margin to separate from left edge */
+        }
+
+        .logo {
+            max-height: 50px; /* Adjust the height as needed */
+            margin-right: 20px; /* Add some margin to separate from title */
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between; /* Distribute space between left and right content */
+            align-items: center; /* Center items vertically */
+        }
+
+        .nav-bar {
+            display: flex;
+            background-color: #333; /* Set background color for the bar */
+            justify-content: center; /* Center the nav-container horizontally */
+            padding: 10px 0; /* Add some padding for the bar */
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center; /* Center the nav-links */
+            gap: 20px;
+            color: #fff;
+            list-style: none; /* Remove bullet points */
+            padding: 0; /* Remove default padding */
+            margin: 0; /* Remove default margin */
+            align-items: center;
+        }
+
+        .container {
+        text-align: center; /* Center align the container content */
+        }
+
+        .forms {
+            max-width: 400px; /* Set maximum width for the form */
+            margin: auto; /* Center the form horizontally */
+            text-align: center; /* Reset text alignment inside the form */
+        }
+
+        .form-group {
+            margin-bottom: 15px; /* Add space between form groups */
+        }
+
+        .form-label {
+            display: block; /* Ensure labels are displayed on separate lines */
+            margin-bottom: 5px; /* Add space between labels and inputs */
+        }
+
+        .forms input[type="text"],
+        .forms select,
+        .forms textarea {
+            width: calc(100% - 16px); /* Make inputs fill their parent container minus padding and border */
+            padding: 8px; /* Adjust padding as needed */
+            border: 1px solid #ccc; /* Add a border for clarity */
+            border-radius: 4px; /* Round the corners of inputs */
+            box-sizing: border-box; /* Include padding and border in width calculation */
+        }
+
+        .welcome-message {
+            text-align: center;
+            margin-top: 5px; /* Adjust as needed */
+            padding-bottom: 5%;
+        }
+
+        button[type="submit"] {
+            width: 100%; /* Make the button fill its parent container */
+            padding: 10px; /* Adjust padding as needed */
+            background-color: #192d38; /* Set button background color */
+            color: #fff; /* Set button text color */
+            border: none; /* Remove button border */
+            border-radius: 4px; /* Round the corners of the button */
+            cursor: pointer; /* Add pointer cursor on hover */
+        }
+
+        button[type="submit"]:hover {
+            background-color: #192d38; /* Darken button color on hover */
+            width: 100%
+        }
+
+        button[type="button"] {
+            width: 100%; /* Make the button fill its parent container */
+            padding: 10px; /* Adjust padding as needed */
+            background-color: #192d38; /* Set button background color */
+            color: #fff; /* Set button text color */
+            border: none; /* Remove button border */
+            border-radius: 4px; /* Round the corners of the button */
+            cursor: pointer; /* Add pointer cursor on hover */
+        }
+
+        button[type="button"]:hover {
+            background-color: #192d38; /* Darken button color on hover */
+            width: 100%
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .button-container1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 10px 0; /* Add margin to create space above and below */
+            position: relative; /* Ensure it is positioned relative to its normal position */
+        }
+
+        .login-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .login-container h1 {
+            margin-bottom: 20px;
+        }
+
+        .login-container label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 350px; /* Set the width for input fields */
+            padding: 12px; /* Increase padding for larger input fields */
+            font-size: 16px; /* Increase font size */
+            border: 1px solid #ccc; /* Add a border for clarity */
+            border-radius: 4px; /* Round the corners of inputs */
+            box-sizing: border-box; /* Include padding and border in width calculation */
+            margin-bottom: 10px; /* Add space between input fields */
+        }
+
+        .login-container input[type="submit"] {
+            width: 350px; /* Set the width for the button */
+            padding: 12px; /* Increase padding for larger button */
+            font-size: 16px; /* Increase font size */
+            background-color: #192d38; /* Set button background color */
+            color: #fff; /* Set button text color */
+            border: none; /* Remove button border */
+            border-radius: 4px; /* Round the corners of the button */
+            cursor: pointer; /* Add pointer cursor on hover */
+            margin-top: 10px; /* Add space above the button */
+        }
+
+        .login-container input[type="submit"]:hover {
+            background-color: #0056b3; /* Darken button color on hover */
+        }
+
+        .button {
+            display: inline-block;
+            width: 130px; /* Set a fixed width */
+            height: 20px; /* Set a fixed height */
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #000000;
+            background-color: #BEDAE5;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.25);
+            transition: background-color 0.3s ease;
+        }
+        
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .right-buttons {
+            display: flex;
+            list-style: none; /* Remove bullet points */
+            align-items: center;
+            justify-content: flex-end; /* Align the buttons to the right */ /* Center the nav-links horizontally */
+            gap: 10px;
+        }
+        .right-buttons .welcome {
+            margin-right: 10px;
+        }
+        
+        .button-secondary {
+            background-color: #6c757d;
+        }
+        
+        .button-secondary:hover {
+            background-color: #495057;
+        }
+
+        .error-message {
+            color: red; /* Set color for error messages */
+            margin-top: 10px; /* Add space above error messages */
+        }
+
+        .footer {
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+        }
+
+        .footer a {
+            color: #192d38;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+
+
+        .messages-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 600px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .messages li {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .messages li.error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+
+    </style>
+</style>
+</head>
+<body>
+  <header class="header">
+      <div class="logo-text">AtkinsRéalis Asset Manager</div>
+      <h1>{% block title_1 %}Page Title{% endblock %}</h1>
+      <nav class="nav-container">
+          <ul class="right-buttons">
+              {% if request.user.is_authenticated %}
+              <span class="welcome">Welcome, {{ request.user.username }}</span>
+              <li><a class="button" href="/logout/">Log Out</a></li>
+              {% else %}
+              <li><a class="button" href="/login/">Log In</a></li>
+              <li><a class="button" href="/register/">Register</a></li>
+              {% endif %}
+          </ul>
+      </nav>
+  </header>
+
+  <div class="nav-bar">
+      <nav class="nav-container">
+          <ul class="nav-links left-buttons">
+              {% if request.user.is_authenticated %}
+              <li><a class="button" href="/home_page/">Home</a></li>
+              <li><a class="button" href="/user_manage/">User Manager</a></li>
+              <li><a class="button" href="/booking_page/">Booking Manager</a></li>
+              {% endif %}
+          </ul>
+      </nav>
+  </div>
+
+  <main class="content">
+    {% if messages %}
+    <div class="messages-container">
+      <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <footer class="footer">
+      <p><a class="button1" href="https://www.atkinsrealis.com/">AtkinsRéalis</a></p>
+      <p>Customer Support: +44 (0) 1946 521842 | Callum.Taylor@atkinsrealis.com</p>
+      <p>Copyright 2024-2024 by AtkinsRéalis. All Rights Reserved.</p>
+      <p>Portal Version: 1.0</p>
+  </footer>
+</body>
+
+<script>
+    function check_duration(value) {
+        var dateToGroup = document.getElementById('id_date_to_group');
+        if (value === 'MD') {
+            dateToGroup.style.display = 'block';
+        } else {
+            dateToGroup.style.display = 'none';
+        }
+    }
+
+    // Call the check_duration function initially to set the initial state
+    check_duration(document.getElementById('id_duration').value);
+    
+    // Add event listener to duration field for onchange event
+    document.getElementById('id_duration').addEventListener('change', function() {
+        check_duration(this.value);
+    });
+
+    function goBack() {
+            window.history.back();
+        }
+</script>
+<script>
+        let lockoutTime = {{ lockout_time|safe }};
+        function startTimer() {
+            let timer = setInterval(function() {
+                lockoutTime -= 0.01;
+                document.getElementById('timer').innerText = lockoutTime.toFixed(2);
+                if (lockoutTime <= 0) {
+                    clearInterval(timer);
+                    window.location.href = "{% url 'login' %}";
+                }
+            }, 10);
+        }
+        window.onload = startTimer;
+    </script>

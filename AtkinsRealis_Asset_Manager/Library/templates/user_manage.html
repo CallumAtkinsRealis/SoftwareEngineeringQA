@@ -11,7 +11,7 @@
     {% block content %}
     <div class="button-container1">
         <a href="/user_info/" class="button">User Info</a>
-        <a href="/create_user/" class="button button-secondary">Create User</a>
+        <a href="/create_user/" class="button">Create User</a>
     </div>
     <h1>User List</h1>
     <table>
@@ -47,7 +47,7 @@
                 </form>
             </td>
             <td>
-                <form method="post" action="{% url 'delete_user' x.email %}">
+                <form method="get" action="{% url 'delete_user' x.email %}">
                     {% csrf_token %}
                     <button type="submit">Delete</button>
                 </form>
@@ -58,5 +58,3 @@
     </table>
     {% endblock %}
 </body>
-
-</html>

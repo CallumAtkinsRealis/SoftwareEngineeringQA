@@ -1,0 +1,15 @@
+{% extends "master.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title_1 %}Account Locked{% endblock %}s</title>
+</head>
+{% block content %}
+<body>
+    <div class="welcome-message">
+    <h1>Your account is locked</h1>
+    <div class="welcome-message"></div>
+    <p>You have been locked out due to too many failed login attempts. Please wait <span id="timer" style="font-weight: bold;">{{ lockout_time }}</span> seconds before trying again.</p>
+    </body>
+{% endblock %}
+</html>

@@ -5,9 +5,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import transaction
 from django.db.models import Q
+from django.utils import timezone
 from .forms import LoginForm, CustomUserForm, CustomUserCreationForm, AssetBookingForm
 from .models import CustomUser, AssetBooking
 
@@ -57,31 +60,28 @@ def create_user(request):
 
 @login_required
 def delete_user(request, email):
-    # renders the delete_user page 
-    # Checks to see if the user is_staff and can delete the user
-    if not request.user.is_staff:
-        messages.error(request, 'Sorry, you do not have permissions to do that.')
-        return redirect('user_page')
-    
     # Get the user object or return a 404 error if not found
     user = get_object_or_404(CustomUser, email=email)
     
+    if not request.user.is_staff:
+        messages.error(request, 'Sorry, you do not have permissions to do that.')
+        return redirect('user_page')
+
     if request.method == 'POST':
         # Update email to empty string for associated bookings where the user is referenced
         AssetBooking.objects.filter(Q(booked_by=user) | Q(project_manager=user)).update(
             booked_by=None, 
             project_manager=None
-            )
+        )
 
         # Now delete the user itself
         user.delete()
 
         messages.success(request, 'User deleted successfully.')
+        return redirect('user_page')
 
-    else:
-        messages.error(request, 'Invalid request method.')
-    
-    return redirect('user_page')  # Redirect to a page that lists all users after deletion
+    # Render a confirmation page for GET requests
+    return render(request, 'confirm_delete.html', {'user': user})
 
 @login_required
 def user_info(request):
@@ -181,49 +181,86 @@ def booking_update(request, booking_id):
 
 @login_required
 def booking_delete(request, booking_id):
-    # Renders the booking delete action
-    # checks to see if the user is_staff and has permissions to delete booking
-    if not request.user.is_staff:
-        messages.error(request, 'Sorry, you do not have permissions to do that.')
-        return redirect('booking_page')
-    
     # Get the booking object or return a 404 error if not found
     booking = get_object_or_404(AssetBooking, booking_id=booking_id)
     
+    if not request.user.is_staff:
+        messages.error(request, 'Sorry, you do not have permissions to do that.')
+        return redirect('booking_page')
+
     if request.method == 'POST':
-        # Delete instances from Assetbooking where the booking_id is referenced
+        # Delete instances from AssetBooking where the booking_id is referenced
         AssetBooking.objects.filter(booking_id=booking_id).delete()
         
         messages.success(request, 'Booking deleted successfully.')
-    else:
-        messages.error(request, 'Invalid request method.')
-    
-    return redirect('booking_page')
+        return redirect('booking_page')
+
+    # Render a confirmation page for GET requests
+    return render(request, 'confirm_delete_booking.html', {'booking': booking})
 
 def login_request(request):
-    # Renders the log in request page
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data.get('username')  # Assuming 'username' field is used for email input
+            email = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate_custom_user(email=email, password=password)
-            if user is not None:
-                if user.is_active:  # Ensure user account is active
-                    login(request, user)
-                    print("User logged in:", user)  # Debugging statement
-                    return redirect('/home_page')  # Redirect to some page after login
-                else:
-                    print("Inactive user:", user)  # Debugging statement
-                    messages.error(request, 'Your account is inactive.')
+            ip = get_client_ip(request)
+            key = f'failed_login_attempts_{ip}'
+            attempts, first_attempt_time = cache.get(key, (0, None))
+            
+            if attempts >= settings.MAX_FAILED_LOGIN_ATTEMPTS:
+                return redirect('lockout_timer')
             else:
-                print("Invalid credentials for email:", email)  # Debugging statement
-                messages.error(request, 'Invalid email or password. Please try again.')
+                if user is not None:
+                    if user.is_active:
+                        login(request, user)
+                        cache.delete(key)  # Reset attempts on successful login
+                        print("User logged in:", user)
+                        return redirect('/home_page')
+                    else:
+                        print("Inactive user:", user)
+                        messages.error(request, 'Your account is inactive.')
+                else:
+                    if attempts == 0:
+                        first_attempt_time = timezone.now()
+                    attempts += 1
+                    cache.set(key, (attempts, first_attempt_time), timeout=settings.FAILED_LOGIN_LOCK_DURATION)
+                    print("Invalid credentials for email:", email)
+                    messages.error(request, 'Invalid email or password. Please try again.')
         else:
             messages.error(request, 'Invalid form submission. Please try again.')
     else:
         form = LoginForm()
     return render(request, 'login_page.html', {'form': form})
+
+def lockout_timer_view(request):
+    ip = get_client_ip(request)
+    key = f'failed_login_attempts_{ip}'
+    attempts, first_attempt_time = cache.get(key, (0, None))
+    if first_attempt_time:
+        lockout_time = settings.FAILED_LOGIN_LOCK_DURATION - (timezone.now() - first_attempt_time).total_seconds()
+        if lockout_time <= 0:
+            return redirect('login')  # Redirect to login page if lockout period is over
+    else:
+        lockout_time = 0
+    return render(request, 'lockout.html', {'lockout_time': lockout_time})
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 def register(request):
     # Renders the register page

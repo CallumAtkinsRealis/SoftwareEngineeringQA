@@ -1,0 +1,11 @@
+<!-- confirm_delete_booking.html -->
+{% extends 'master.html' %}
+
+{% block content %}
+  <h2>Are you sure you want to delete this booking?</h2>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'booking_page' %}">Cancel</a>
+  </form>
+{% endblock %}

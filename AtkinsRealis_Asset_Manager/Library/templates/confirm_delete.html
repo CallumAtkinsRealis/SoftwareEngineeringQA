@@ -1,0 +1,16 @@
+{% extends 'master.html' %}
+
+{% block content %}
+<div>
+    <main class="content">
+        <h2>Are you sure you want to delete {{ user.email }}?</h2>
+        <form method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="[csrf_token]">
+            <div class="button-container1">
+                <button type="submit" class="button">Yes, delete</button>
+                <a href="{% url 'user_page' %}" class="button">Cancel</a>
+            </div>
+        </form>
+    </main>
+</div>
+{% endblock %}
