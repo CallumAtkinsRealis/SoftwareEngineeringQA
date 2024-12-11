@@ -38,13 +38,26 @@
             text-align: center;
             margin: 10px 0;
         }
-        .table, tr, th, td {
-            width: 100px;
+
+        .table-container {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            width: 100%; /* Ensure the container takes full width */
+        }
+
+        .table {
+            width: 100%; /* Adjust as needed */
             table-layout: fixed;
             border: 1px solid black;
             border-collapse: collapse;
             border-spacing: 0;
-            margin: 0 auto;
+            margin: 0 auto; /* Center the table */
+        }
+
+        tr, th, td {
+            width: 100px;
+            border: 1px solid black;
         }
         .logo-text {
             font-size: 30px;
@@ -169,6 +182,42 @@
             box-shadow: 0 2px 4px rgba(0, 123, 255, 0.25);
             transition: background-color 0.3s ease;
         }
+
+        .button1 {
+            display: inline-block;
+            width: 100%; /* Make button fill the cell */
+            height: 100%; /* Make button fill the cell */
+            padding: 10px 0; /* Adjust padding as needed */
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #000000;
+            background-color: #BEDAE5;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.25);
+            transition: background-color 0.3s ease;
+        }
+        .button2 {
+            display: inline-block;
+            width: 350px; /* Set the desired width */
+            height: auto; /* Adjust height as needed */
+            padding: 10px 20px; /* Adjust padding as needed */
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #000000;
+            background-color: #BEDAE5;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.25);
+            transition: background-color 0.3s ease;
+        }
         .button:hover {
             background-color: #0056b3;
         }
@@ -269,7 +318,7 @@
         {% block content %}{% endblock %}
     </main>
     <footer class="footer">
-        <p><a class="button1" href="https://www.atkinsrealis.com/">AtkinsRéalis</a></p>
+        <p><a href="https://www.atkinsrealis.com/">AtkinsRéalis</a></p>
         <p>Customer Support: +44 (0) 1946 521842<br>Callum.Taylor@atkinsrealis.com</p>
         <p>Copyright 2024-2024 by AtkinsRéalis. All Rights Reserved.</p>
         <p>Portal Version: 1.0</p>

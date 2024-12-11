@@ -4,6 +4,9 @@ from django.contrib.admin.views.decorators import user_passes_test
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.conf import settings
@@ -263,19 +266,34 @@ def get_client_ip(request):
     return ip
 
 def register(request):
-    # Renders the register page
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            with transaction.atomic():
-                custom_user = form.save()  # Save user in CustomUser model
-                messages.success(request, 'User created successfully.')
-                return redirect('login')  # Redirect to login page on successful submission
+            password = form.cleaned_data.get('password')
+
+            if not password:
+                messages.error(request, 'Password field is empty.')
+                return render(request, 'register.html', {'form': form})
+
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                form.add_error('password', e)  # Add validation error to the password field
+                messages.error(request, 'Your password must be between 8-20 characters and include at least one special character.')
+            else:
+                with transaction.atomic():
+                    custom_user = form.save()
+                    messages.success(request, 'User created successfully.')
+                    return redirect('login')
         else:
             messages.error(request, 'Error creating user. Please check the form.')
+
+        # Re-render the form with entered data, including errors, but without clearing any field
+        return render(request, 'register.html', {'form': form})
+
     else:
         form = CustomUserCreationForm()
-    return render(request, 'register.html', {'form': form, 'error_messages': messages.get_messages(request)})
+    return render(request, 'register.html', {'form': form})
 
 def authenticate_custom_user(email, password):
     # function for authenticating custom user
