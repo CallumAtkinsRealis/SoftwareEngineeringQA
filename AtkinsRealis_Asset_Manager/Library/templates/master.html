@@ -326,35 +326,45 @@
     <script>
         function check_duration(value) {
             var dateToGroup = document.getElementById('id_date_to_group');
-            if (value === 'MD') {
-                dateToGroup.style.display = 'block';
-            } else {
-                dateToGroup.style.display = 'none';
+            if (dateToGroup) {
+                if (value === 'MD') {
+                    dateToGroup.style.display = 'block';
+                } else {
+                    dateToGroup.style.display = 'none';
+                }
             }
         }
-        // Call the check_duration function initially to set the initial state
-        check_duration(document.getElementById('id_duration').value);
-        
-        // Add event listener to duration field for onchange event
-        document.getElementById('id_duration').addEventListener('change', function() {
-            check_duration(this.value);
-        });
-        function goBack() {
-            window.history.back();
+
+        // Ensure the initial state is set
+        var durationElement = document.getElementById('id_duration');
+        if (durationElement) {
+            check_duration(durationElement.value);
+
+            // Add event listener for onchange
+            durationElement.addEventListener('change', function () {
+                check_duration(this.value);
+            });
         }
+
     </script>
     <script>
         let lockoutTime = {{ lockout_time|safe }};
         function startTimer() {
-            let timer = setInterval(function() {
-                lockoutTime -= 0.01;
+            if (isNaN(lockoutTime) || lockoutTime <= 0) {
+                console.error("Invalid lockoutTime value. Please set a valid time in seconds.");
+                return;
+            }
+
+            let timer = setInterval(function () {
+                lockoutTime -= 0.01; // Decrement by 0.01 seconds
                 document.getElementById('timer').innerText = lockoutTime.toFixed(2);
+
                 if (lockoutTime <= 0) {
                     clearInterval(timer);
-                    window.location.href = "{% url 'login' %}";
+                    window.location.href = "/login/";
                 }
-            }, 10);
-        }
+            }, 10); // Update every 10ms for smooth countdown
+}
         window.onload = startTimer;
     </script>
 </body>

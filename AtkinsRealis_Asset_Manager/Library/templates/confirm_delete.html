@@ -5,12 +5,11 @@
 </head>
 
 {% block content %}
-
 <div>
     <main class="content">
         <h1>Are you sure you want to delete {{ user.email }}?</h1>
         <form method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="[csrf_token]">
+            {% csrf_token %}
             <div class="button-container">
                 <button type="submit" class="button2">Yes</button>
                 <a href="{% url 'user_page' %}" class="button2">No</a>

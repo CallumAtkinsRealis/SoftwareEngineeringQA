@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wof5b=6#j3j-juzg_gm!91u+j7-rkrqn%mzuhcab#c(jx*aara'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
@@ -33,6 +33,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Session expires when the user closes th
 SESSION_COOKIE_AGE = 3600 # Session expires after 1 hour (3600 seconds)
 
 LOGIN_URL = '../login/'
+
+CSRF_FAILURE_VIEW = 'Library.views.custom_csrf_failure_view'
 
 # Application definition
 
@@ -52,6 +54,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'Library.middleware.InvalidURLMiddleware',
     'Library.middleware.LoginAttemptMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -59,7 +62,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'AtkinsRealis_Asset_Manager.urls'
 MAX_FAILED_LOGIN_ATTEMPTS = 3
-FAILED_LOGIN_LOCK_DURATION = 5
+FAILED_LOGIN_LOCK_DURATION = 30
 
 
 TEMPLATES = [
