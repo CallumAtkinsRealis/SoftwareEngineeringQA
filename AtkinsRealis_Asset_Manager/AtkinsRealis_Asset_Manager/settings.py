@@ -26,8 +26,7 @@ SECRET_KEY = 'django-insecure-wof5b=6#j3j-juzg_gm!91u+j7-rkrqn%mzuhcab#c(jx*aara
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'atkinsrealis-asset-manager.onrender.com'
-]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'atkinsrealis-asset-manager.onrender.com', '0.0.0.0']
 
 # SESSION settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Session expires when the user closes the browser
@@ -36,6 +35,7 @@ SESSION_COOKIE_AGE = 3600 # Session expires after 1 hour (3600 seconds)
 LOGIN_URL = '../login/'
 
 CSRF_FAILURE_VIEW = 'Library.views.custom_csrf_failure_view'
+CSRF_TRUSTED_ORIGINS = ['https://atkinsrealis-asset-manager.onrender.com']
 
 # Application definition
 
