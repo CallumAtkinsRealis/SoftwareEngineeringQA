@@ -1,0 +1,104 @@
+:root {
+  --primary-color: #192d38;
+  --secondary-color: #0056b3;
+  --font-family: Arial, sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+}
+
+.header {
+  font-size: 15px;
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f2f2f2;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.table tr:hover {
+  background-color: #ddd;
+}
+
+.logo-text {
+  font-size: 30px;
+  font-weight: bold;
+  margin-left: 20px;
+}
+
+.logo {
+  max-height: 50px;
+  margin-right: 20px;
+}
+
+.forms input[type="text"],
+.forms select,
+.forms textarea {
+  width: calc(100% - 16px);
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.welcome-message {
+  text-align: center;
+  margin-top: 50px;
+}
+
+button[type="submit"],
+button[type="button"] {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover,
+button[type="button"]:hover {
+  background-color: var(--secondary-color);
+}
+
+.button-container,
+.button-container1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.button-container {
+  top: 30%;
+}
+
+.button-container1 {
+  top: 15%;
+}

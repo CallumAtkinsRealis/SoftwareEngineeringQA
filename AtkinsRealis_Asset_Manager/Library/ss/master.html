@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AtkinsRéalis Asset Manager</title>
+    <style>
+        :root {
+            --primary-color: #192d38;
+            --secondary-color: #0056b3;
+            --font-family: Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+        }
+
+        .header {
+            font-size: 15px;
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table, tr, th, td {
+            width: 100px;
+            table-layout: fixed;
+            border: 1px solid black;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        .logo-text {
+            font-size: 30px;
+            font-weight: bold;
+            margin-left: 20px;
+        }
+
+        .logo {
+            max-height: 50px;
+            margin-right: 20px;
+        }
+
+        .nav-links {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-right: 15px;
+        }
+
+        .nav-links li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .forms {
+            max-width: 400px;
+            margin: auto;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .forms input[type="text"],
+        .forms select,
+        .forms textarea {
+            width: calc(100% - 16px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .welcome-message {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        button[type="submit"],
+        button[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover,
+        button[type="button"]:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .button-container,
+        .button-container1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .button-container {
+            top: 30%;
+        }
+
+        .button-container1 {
+            top: 15%;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.25);
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .button-secondary {
+            background-color: #6c757d;
+        }
+
+        .button-secondary:hover {
+            background-color: #495057;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .nav-links {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .nav-links li {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-text">AtkinsRéalis Asset Manager</div>
+        <h1>{% block title_1 %}Page Title{% endblock %}</h1>
+        {% if request.user.is_authenticated %}
+            <p>Welcome, {{ request.user.username }}</p>
+        {% endif %}
+        <nav>
+            <ul class="nav-links">
+                {% if request.user.is_authenticated %}
+                    <li><a href="/logout/">Log Out</a></li>
+                    <li><a href="/home_page/">Home</a></li>
+                    <li><a href="/user_manage/">User Manager</a></li>
+                    <li><a href="/booking_page/">Booking Manager</a></li>
+                {% else %}
+                    <li><a href="/login/">Log In</a></li>
+                    <li><a href="/register/">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main class="content">
+        {% if messages %}
+            <div class="messages-container">
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        {% block content %}
+        <!-- Your content goes here -->
+        {% endblock %}
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const durationElement = document.getElementById('id_duration');
+            const dateToGroup = document.getElementById('id_date_to_group');
+
+            function checkDuration(value) {
+                dateToGroup.style.display = value === 'MD' ? 'block' : 'none';
+            }
+
+            checkDuration(durationElement.value);
+            durationElement.addEventListener('change', () => {
+                checkDuration(durationElement.value);
+            });
+
+            document.getElementById('goBackButton').addEventListener('click', () => {
+                window.history.back();
+            });
+        });
+    </script>
+</body>
+</html>

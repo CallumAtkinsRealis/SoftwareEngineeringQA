@@ -305,7 +305,12 @@ def authenticate_custom_user(email, password):
             return None
     except CustomUser.DoesNotExist:
         return None
+    
+def confirm_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('login')
+    return render(request, 'confirm_logout.html')
 
 def logout_request(request):
-    logout(request)
-    return redirect('login')
+    return redirect('confirm_logout')

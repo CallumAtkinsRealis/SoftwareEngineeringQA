@@ -1,0 +1,21 @@
+{% extends 'master.html' %}
+
+<head>
+    <title>{% block title_1 %}Confirm Log Out{% endblock %}</title>
+</head>
+
+{% block content %}
+
+<div>
+    <main class="content">
+        <h1>Are you sure you want to log out?</h1>
+        <form method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="[csrf_token]">
+            <div class="button-container">
+                <button type="submit" class="button2">Yes</button>
+                <button type="button" class="button2" onclick="window.history.back();">No</button>
+            </div>
+        </form>
+    </main>
+</div>
+{% endblock %}
