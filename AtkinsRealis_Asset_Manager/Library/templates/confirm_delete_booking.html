@@ -1,0 +1,20 @@
+{% extends 'master.html' %}
+
+<head>
+  <title>{% block title_1 %}Confirm Deletion{% endblock %}</title>
+</head>
+
+{% block content %}
+<div>
+    <main class="content">
+        <h1>Are you sure you want to delete this booking?</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="button-container">
+                <button type="submit" class="button2">Yes</button>
+                <a href="{% url 'booking_page' %}" class="button2">No</a>
+            </div>
+        </form>
+    </main>
+</div>
+{% endblock %}

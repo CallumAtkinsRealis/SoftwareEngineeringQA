@@ -6,6 +6,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title_1 %}Create User{% endblock %}</title>
+    <style>
+        .button {
+            width: 100%;
+            padding: 10px;
+            background-color: #192d38;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0f1e26; /* Adjust the hover color if needed */
+        }
+
+        .button-container1 {
+            display: flex;
+            gap: 10px; /* Adjust the gap between buttons as needed */
+        }
+    </style>
 </head>
 <body>
     {% block content %}
@@ -43,7 +67,9 @@
                 <input type="checkbox" id="is_staff" name="is_staff" {% if form.instance.is_staff %}checked{% endif %}>
             </div>
             {% endif %}
-            <button type="submit" class="btn btn-primary">Create User</button>
+            <button type="submit" class="button1">Create User</button>
+            <div class="form-group"></div>
+            <button type="button" class="button1" onclick="goBack()">Go Back</button>
         </form>
         <div id="error-message" class="error-message" style="display: none;"></div>
     </div>

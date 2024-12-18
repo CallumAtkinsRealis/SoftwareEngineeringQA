@@ -9,21 +9,27 @@
 
 
 {% block content %}
+</head>
 <body>
-    {% if error_message %}
-        <p>{{ error_message }}</p>
-    {% endif %}
-    <form method="POST">
-        {% csrf_token %}
-        <h1>Login</h1>
-        <form method="post">
+    <div class="login-container">
+        {% if error_message %}
+            <p class="error-message">{{ error_message }}</p>
+        {% endif %}
+        <form method="POST">
             {% csrf_token %}
+            <h1>Login</h1>
             <label for="id_username">Email</label>
             {{ form.username }}
-            <label for="id_password">Password:</label>
+            <label for="id_password">Password</label>
             {{ form.password }}
-            <input type="submit" value="Login">
-    </form>
+            <div>
+                <input type="submit" value="Login" class="button2">
+            </div>
+        </form>
+        <div class="login-link">
+            <p>Don't have an account? <a href="/register/">Register here</a>.</p>
+        </div>
+    </div>
 </body>
 {% endblock %}
 </html>

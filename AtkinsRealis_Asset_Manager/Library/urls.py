@@ -10,10 +10,12 @@ urlpatterns = [
     path('login/', views.login_request, name='login'),
     path('register/', views.register, name='register'),
     path('logout/', views.logout_request, name='logout'),
+    path('confirm_logout/', views.confirm_logout, name='confirm_logout'),
     path('home_page/', views.home, name='home'),
     path('create_user/', views.create_user, name='create_user'),
     path('delete_user/<str:email>/', views.delete_user, name='delete_user'),
     path('user_info/', views.user_info, name='user_info'),
+    path('lockout_timer/', views.lockout_timer_view, name='lockout_timer'),
     path('user_update/<str:username>/', views.user_update, name='user_update'),
     path('user_manage/', views.user_page, name='user_page'),
     

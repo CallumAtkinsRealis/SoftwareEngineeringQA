@@ -6,121 +6,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AtkinsRéalis Asset Manager</title>
     <style>
-        body {
-            font-family: Arial, sans-serif; /* Apply Arial font to all text */
+        body, html {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
         }
-        /* Header Styles */
-        .header {
-            font-size: 15px;
-            background-color: #192d38; /* Dark Grey */
-            color: #fff; /* White text */
-            padding: 15px; /* Add some padding */
+        .content {
+            margin-top: 20px;
+            padding: 20px;
+            flex: 1;
+        }
+        .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-family: Arial, sans-serif;
+            margin-bottom: 20px;
+        }
+        .header {
+            font-size: 15px;
+            background-color: #192d38;
+            color: #fff;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 {
+            text-align: center;
+            margin: 10px 0;
         }
 
-        .table, tr, th, td {
-            width: 100px; /* Set your desired fixed width */
+        .table-container {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            width: 100%; /* Ensure the container takes full width */
+        }
+
+        .table {
+            width: 100%; /* Adjust as needed */
             table-layout: fixed;
             border: 1px solid black;
             border-collapse: collapse;
             border-spacing: 0;
-            margin: 0 auto;
+            margin: 0 auto; /* Center the table */
         }
 
+        tr, th, td {
+            width: 100px;
+            border: 1px solid black;
+        }
         .logo-text {
-            font-size: 30px; /* Adjust the font size as needed */
+            font-size: 30px;
             font-weight: bold;
-            margin-left: 20px; /* Add some margin to separate from left edge */
+            margin-left: 20px;
         }
-
         .logo {
-            max-height: 50px; /* Adjust the height as needed */
-            margin-right: 20px; /* Add some margin to separate from title */
+            max-height: 50px;
+            margin-right: 20px;
         }
-
-        .nav-links {
-            list-style-type: none; /* Remove bullet points */
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
+        .nav-container {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
-        .nav-links li {
-            margin-right: 15px; /* Add some space between each link */
+        .nav-bar {
+            display: flex;
+            background-color: #333;
+            justify-content: center;
+            padding: 10px 0;
         }
-
-        .nav-links li a {
-            color: #fff; /* White text */
-            text-decoration: none; /* Remove underline */
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            color: #fff;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            align-items: center;
         }
-
         .container {
-        text-align: center; /* Center align the container content */
+            text-align: center;
         }
-
         .forms {
-            max-width: 400px; /* Set maximum width for the form */
-            margin: auto; /* Center the form horizontally */
-            text-align: left; /* Reset text alignment inside the form */
+            max-width: 400px;
+            margin: auto;
+            text-align: center;
         }
-
         .form-group {
-            margin-bottom: 15px; /* Add space between form groups */
+            margin-bottom: 15px;
         }
-
         .form-label {
-            display: block; /* Ensure labels are displayed on separate lines */
-            margin-bottom: 5px; /* Add space between labels and inputs */
+            display: block;
+            margin-bottom: 5px;
         }
-
         .forms input[type="text"],
         .forms select,
         .forms textarea {
-            width: calc(100% - 16px); /* Make inputs fill their parent container minus padding and border */
-            padding: 8px; /* Adjust padding as needed */
-            border: 1px solid #ccc; /* Add a border for clarity */
-            border-radius: 4px; /* Round the corners of inputs */
-            box-sizing: border-box; /* Include padding and border in width calculation */
+            width: calc(100% - 16px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
-
         .welcome-message {
             text-align: center;
-            margin-top: 50px; /* Adjust as needed */
+            margin-top: 5px;
+            padding-bottom: 5%;
         }
-
-        button[type="submit"] {
-            width: 100%; /* Make the button fill its parent container */
-            padding: 10px; /* Adjust padding as needed */
-            background-color: #192d38; /* Set button background color */
-            color: #fff; /* Set button text color */
-            border: none; /* Remove button border */
-            border-radius: 4px; /* Round the corners of the button */
-            cursor: pointer; /* Add pointer cursor on hover */
-        }
-
-        button[type="submit"]:hover {
-            background-color: #192d38; /* Darken button color on hover */
-            width: 100%
-        }
-
-        button[type="button"] {
-            width: 100%; /* Make the button fill its parent container */
-            padding: 10px; /* Adjust padding as needed */
-            background-color: #192d38; /* Set button background color */
-            color: #fff; /* Set button text color */
-            border: none; /* Remove button border */
-            border-radius: 4px; /* Round the corners of the button */
-            cursor: pointer; /* Add pointer cursor on hover */
-        }
-
-        button[type="button"]:hover {
-            background-color: #192d38; /* Darken button color on hover */
-            width: 100%
-        }
-
         .button-container {
             display: flex;
             justify-content: center;
@@ -130,20 +127,47 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
-
         .button-container1 {
             display: flex;
             justify-content: center;
             align-items: center;
             position: absolute;
-            top: 15%;
             left: 50%;
             transform: translate(-50%, -50%);
+            margin: 10px 0;
+            position: relative;
         }
-
-
+        .login-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .login-container h1 {
+            margin-bottom: 20px;
+        }
+        .login-container label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 350px;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        .login-container input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
         .button {
             display: inline-block;
+            width: 130px;
+            height: 20px;
             padding: 10px 20px;
             font-size: 16px;
             margin: 10px;
@@ -151,92 +175,197 @@
             text-align: center;
             text-decoration: none;
             outline: none;
-            color: #fff;
-            background-color: #192d38;
+            color: #000000;
+            background-color: #BEDAE5;
             border: none;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 123, 255, 0.25);
             transition: background-color 0.3s ease;
         }
-        
+
+        .button1 {
+            display: inline-block;
+            width: 100%; /* Make button fill the cell */
+            height: 100%; /* Make button fill the cell */
+            padding: 10px 0; /* Adjust padding as needed */
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #000000;
+            background-color: #BEDAE5;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.25);
+            transition: background-color 0.3s ease;
+        }
+        .button2 {
+            display: inline-block;
+            width: 350px; /* Set the desired width */
+            height: auto; /* Adjust height as needed */
+            padding: 10px 20px; /* Adjust padding as needed */
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #000000;
+            background-color: #BEDAE5;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.25);
+            transition: background-color 0.3s ease;
+        }
         .button:hover {
             background-color: #0056b3;
         }
-        
-        .button-secondary {
-            background-color: #6c757d;
+        .right-buttons {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
         }
-        
-        .button-secondary:hover {
-            background-color: #495057;
+        .right-buttons .welcome {
+            margin-right: 10px;
         }
-
         .error-message {
-            color: red; /* Set color for error messages */
-            margin-top: 10px; /* Add space above error messages */
+            color: red;
+            margin-top: 10px;
+        }
+        .footer {
+            background-color: #f1f1f1;
+            text-align: center;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+        .footer a {
+            color: #192d38;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .messages-container {
+            width: 80%;
+            max-width: 600px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            margin-bottom: 40px; /* Add extra margin at the bottom */
         }
 
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .messages li {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .messages li.error {
+            text-align: center;
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
     </style>
 </head>
 <body>
-
-    <div class="header">
+    <header class="header">
         <div class="logo-text">AtkinsRéalis Asset Manager</div>
-        <div>
         <h1>{% block title_1 %}Page Title{% endblock %}</h1>
+        <nav class="nav-container">
+            <ul class="right-buttons">
+                {% if request.user.is_authenticated %}
+                    <span class="welcome">Welcome, {{ request.user.username }}</span>
+                    <li><a class="button" href="/logout/">Log Out</a></li>
+                {% else %}
+                    <li><a class="button" href="/login/">Log In</a></li>
+                    <li><a class="button" href="/register/">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <div class="nav-bar">
+        <nav class="nav-container">
+            <ul class="nav-links left-buttons">
+                {% if request.user.is_authenticated %}
+                    <li><a class="button" href="/home_page/">Home</a></li>
+                    <li><a class="button" href="/user_manage/">User Manager</a></li>
+                    <li><a class="button" href="/booking_page/">Booking Manager</a></li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
-    {% if request.user.is_authenticated %}
-    <p>Welcome, {{ request.user.username }}</p>
-    {% endif %}
-    <div>
-        <ul class="nav-links">
-            {% if request.user.is_authenticated %}
-            <li><a href="/logout/">Log Out</a></li>
-            <li><a href="/home_page/">Home</a></li>
-            <li><a href="/user_manage/">User Manager</a></li>
-            <li><a href="/booking_page/">Booking Manager</a></li>
-            {% else %}
-                <li><a href="/login/">Log In</a></li>
-                <li><a href="/register/">Register</a></li>
-            {% endif %}
-        </ul>
-    </div>
-</div>
+    <main class="content">
+        {% if messages %}
+            <div class="messages-container">
+                <ul class="messages">
+                    {% for message in messages %}
+                            <li{% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="footer">
+        <p><a href="https://www.atkinsrealis.com/">AtkinsRéalis</a></p>
+        <p>Customer Support: +44 (0) 1946 521842<br>Callum.Taylor@atkinsrealis.com</p>
+        <p>Copyright 2024-2024 by AtkinsRéalis. All Rights Reserved.</p>
+        <p>Portal Version: 1.0</p>
+    </footer>
+    <script>
+        function check_duration(value) {
+            var dateToGroup = document.getElementById('id_date_to_group');
+            if (dateToGroup) {
+                if (value === 'MD') {
+                    dateToGroup.style.display = 'block';
+                } else {
+                    dateToGroup.style.display = 'none';
+                }
+            }
+        }
 
-<div class="content">
-    {% if messages %}
-    <div style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-      <ul class="messages" style="list-style-type: none; padding: 0;">
-        {% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-    {% block content %}
-    <!-- Your content goes here -->
-    {% endblock %}
+        // Ensure the initial state is set
+        var durationElement = document.getElementById('id_duration');
+        if (durationElement) {
+            check_duration(durationElement.value);
+
+            // Add event listener for onchange
+            durationElement.addEventListener('change', function () {
+                check_duration(this.value);
+            });
+        }
+
+    </script>
+    <script>
+        let lockoutTime = {{ lockout_time|safe }};
+        function startTimer() {
+            if (isNaN(lockoutTime) || lockoutTime <= 0) {
+                console.error("Invalid lockoutTime value. Please set a valid time in seconds.");
+                return;
+            }
+
+            let timer = setInterval(function () {
+                lockoutTime -= 0.01; // Decrement by 0.01 seconds
+                document.getElementById('timer').innerText = lockoutTime.toFixed(2);
+
+                if (lockoutTime <= 0) {
+                    clearInterval(timer);
+                    window.location.href = "/login/";
+                }
+            }, 10); // Update every 10ms for smooth countdown
+}
+        window.onload = startTimer;
+    </script>
 </body>
-<script>
-    function check_duration(value) {
-        var dateToGroup = document.getElementById('id_date_to_group');
-        if (value === 'MD') {
-            dateToGroup.style.display = 'block';
-        } else {
-            dateToGroup.style.display = 'none';
-        }
-    }
-
-    // Call the check_duration function initially to set the initial state
-    check_duration(document.getElementById('id_duration').value);
-    
-    // Add event listener to duration field for onchange event
-    document.getElementById('id_duration').addEventListener('change', function() {
-        check_duration(this.value);
-    });
-
-    function goBack() {
-            window.history.back();
-        }
-</script>
 </html>

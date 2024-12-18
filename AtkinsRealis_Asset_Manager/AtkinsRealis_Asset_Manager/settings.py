@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,15 +24,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wof5b=6#j3j-juzg_gm!91u+j7-rkrqn%mzuhcab#c(jx*aara'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'atkinsrealis-asset-manager.onrender.com', '0.0.0.0']
 
 # SESSION settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Session expires when the user closes the browser
 SESSION_COOKIE_AGE = 3600 # Session expires after 1 hour (3600 seconds)
 
 LOGIN_URL = '../login/'
+
+CSRF_FAILURE_VIEW = 'Library.views.custom_csrf_failure_view'
+CSRF_TRUSTED_ORIGINS = ['https://atkinsrealis-asset-manager.onrender.com']
 
 # Application definition
 
@@ -50,12 +54,17 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'Library.middleware.InvalidURLMiddleware',
+    'Library.middleware.LoginAttemptMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'AtkinsRealis_Asset_Manager.urls'
+MAX_FAILED_LOGIN_ATTEMPTS = 3
+FAILED_LOGIN_LOCK_DURATION = 30
+
 
 TEMPLATES = [
     {
@@ -96,6 +105,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+                'OPTIONS': {
+            'min_length': 8,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -103,6 +115,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+        {
+        'NAME': 'Library.validators.SpecialCharacterValidator',
+    },
+
 ]
 
 PASSWORD_HASHERS = [
@@ -132,7 +148,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

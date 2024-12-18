@@ -2,18 +2,17 @@
 
 <!DOCTYPE html>
 <html>
-    
 <head>
     <title>{% block title_1 %}Booking's Manager{% endblock %}</title>
 </head>
-
 <body>
     {% block content %}
     <div class="button-container1">
         <a href="/new_booking/" class="button">New Booking</a>
     </div>
     <h1>Booking List</h1>
-        <table>
+    <div class="table-container">
+        <table class="table">
             <tr>
                 <th style="min-width: 150px;">Booking ID:</th>
                 <th style="min-width: 150px;">Booked By:</th>
@@ -29,7 +28,7 @@
                 <th style="min-width: 150px;">Delete:</th>
                 {% endif %}
             </tr>
-        {% for booking in mybookings %}
+            {% for booking in mybookings %}
             <tr>
                 <td>{{ booking.booking_id }}</td>
                 <td>
@@ -50,23 +49,26 @@
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td>{{ booking.date_booked_for }}
+                <td>{{ booking.date_booked_for }}</td>
                 <td>{{ booking.approved }}</td>
                 <td>
                     <form action="{% url 'booking_update' booking.booking_id %}">
                         {% csrf_token %}
-                        <button type="submit">Update</button>
+                        <button type="submit" class="button1">Update</button>
                     </form>
                 </td>
                 {% if request.user.is_staff %}
                 <td>
-                    <form method="post" action="{% url 'booking_delete' booking.booking_id %}">
+                    <form method="get" action="{% url 'booking_delete' booking.booking_id %}">
                         {% csrf_token %}
-                        <button type="submit">Delete</button>
+                        <button type="submit" class="button1">Delete</button>
                     </form>
                 </td>
                 {% endif %}
             </tr>
-        {% endfor %}
+            {% endfor %}
+        </table>
+    </div>
     {% endblock %}
 </body>
+</html>

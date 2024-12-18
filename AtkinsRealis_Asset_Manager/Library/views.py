@@ -2,12 +2,19 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.admin.views.decorators import user_passes_test
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.db import transaction
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import transaction
 from django.db.models import Q
+from django.utils import timezone
 from .forms import LoginForm, CustomUserForm, CustomUserCreationForm, AssetBookingForm
 from .models import CustomUser, AssetBooking
 
@@ -15,15 +22,24 @@ from .models import CustomUser, AssetBooking
 
 @login_required
 def default(request):
+    """
+    Redirects authenticated users to the login page.
+    """
     return redirect('login')
+
 
 @login_required
 def home(request):
-    # Renders home page
+    """
+    Renders the home page for authenticated users.
+    """
     return render(request, "home.html")
 
 @login_required
 def user_page(request):
+    """
+    Renders the user management page with all users, hiding their passwords.
+    """
     # Fetch all users from CustomUser model
     myusers = CustomUser.objects.all().values()
 
@@ -32,19 +48,22 @@ def user_page(request):
         user['password'] = '*' * 12
 
     context = { 
-            "myusers" : myusers,
-        } 
+        "myusers": myusers,
+    } 
     # Renders user_page page with all users
     return render(request, "user_manage.html", context)
 
 @login_required
 def create_user(request):
-    # checks the form submitted on the create_user page
+    """
+    Handles user creation via a form submission.
+    """
+    # Checks the form submitted on the create_user page
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             with transaction.atomic():
-                #Save User in CustomUser Model
+                # Save User in CustomUser Model
                 CustomUserSave = form.save()
                 messages.success(request, 'User created successfully.')
                 # Redirect to user_page on successful submission
@@ -53,39 +72,43 @@ def create_user(request):
             messages.error(request, 'Error creating user. Please check the form.')
     else:
         form = CustomUserCreationForm()
+    
     return render(request, 'create_user.html', {'form': form, 'error_messages': messages.get_messages(request)})
 
 @login_required
 def delete_user(request, email):
-    # renders the delete_user page 
-    # Checks to see if the user is_staff and can delete the user
-    if not request.user.is_staff:
-        messages.error(request, 'Sorry, you do not have permissions to do that.')
-        return redirect('user_page')
-    
+    """
+    Deletes a user and updates associated bookings.
+    """
     # Get the user object or return a 404 error if not found
     user = get_object_or_404(CustomUser, email=email)
     
+    if not request.user.is_staff:
+        messages.error(request, 'Sorry, you do not have permissions to do that.')
+        return redirect('user_page')
+
     if request.method == 'POST':
         # Update email to empty string for associated bookings where the user is referenced
         AssetBooking.objects.filter(Q(booked_by=user) | Q(project_manager=user)).update(
             booked_by=None, 
             project_manager=None
-            )
+        )
 
         # Now delete the user itself
         user.delete()
 
         messages.success(request, 'User deleted successfully.')
+        return redirect('user_page')
 
-    else:
-        messages.error(request, 'Invalid request method.')
-    
-    return redirect('user_page')  # Redirect to a page that lists all users after deletion
+    # Render a confirmation page for GET requests
+    return render(request, 'confirm_delete.html', {'user': user})
 
 @login_required
 def user_info(request):
-    # renders the user page 
+    """
+    Renders the user information page and handles updates to user information.
+    """
+    # Renders the user page 
     user = request.user
     try:
         custom_user = CustomUser.objects.get(email=user)
@@ -107,7 +130,10 @@ def user_info(request):
 
 @login_required
 def user_update(request, username):
-        # Checks to see if the user is_staff and can update the user
+    """
+    Updates user information for a specified user.
+    """
+    # Checks to see if the user is_staff and can update the user
     if not request.user.is_staff:
         messages.error(request, 'Sorry, you do not have permissions to do that.')
         return redirect('user_page')
@@ -118,9 +144,16 @@ def user_update(request, username):
     if request.method == 'POST':
         form = CustomUserForm(request.POST, instance=user)
         if form.is_valid():
-            # Check if password field is empty, if not, update the password
-            if not form.cleaned_data['password']:
-                form.cleaned_data.pop('password')  # Remove the password field from cleaned data
+            password = form.cleaned_data.get('password')
+
+            if password:
+                try:
+                    validate_password(password)
+                except ValidationError as e:
+                    form.add_error('password', e)  # Add validation error to the password field
+                    messages.error(request, 'Your password must be between 8-20 characters and include at least one special character.')
+                    return render(request, 'user_info.html', {'form': form, 'error_messages': messages.get_messages(request)})
+            
             form.save()
             messages.success(request, 'User information updated successfully.')
             return redirect('user_page')  # Redirect to the same page after successful update
@@ -133,18 +166,31 @@ def user_update(request, username):
 
 @login_required
 def booking_page(request):
-    # Fetch all bookings from CustomUser model
+    """
+    Renders the bookings management page with all bookings and users.
+    """
+    # Fetch all bookings from AssetBooking model
     mybookings = AssetBooking.objects.all().values()
     myusers = CustomUser.objects.all().values()
 
     context = { 
-            "mybookings" : mybookings,
-            "myusers" : myusers
-        } 
+        "mybookings": mybookings,
+        "myusers": myusers
+    } 
     return render(request, "bookings_manage.html", context)
+
+@requires_csrf_token
+def custom_csrf_failure_view(request, reason=""):
+    """
+    Custom view for handling CSRF failures.
+    """
+    return render(request, '403_csrf.html', status=403)
 
 @login_required
 def create_booking(request):
+    """
+    Handles the creation of a new booking.
+    """
     # Renders the create_booking FORM to booking_page URL
     if request.method == 'POST':
         form = AssetBookingForm(request.POST)
@@ -158,14 +204,18 @@ def create_booking(request):
             print("Form is invalid:", form.errors)  # Print form errors for debugging
     else:
         form = AssetBookingForm()
+    
     return render(request, 'new_booking.html', {'form': form})
 
 @login_required
 def booking_update(request, booking_id):
+    """
+    Updates booking information for a specified booking.
+    """
     # Renders the booking update page
     existing_booking = get_object_or_404(AssetBooking, booking_id=booking_id)
 
-    # checks the submitted form
+    # Checks the submitted form
     if request.method == 'POST':
         form = AssetBookingForm(request.POST, instance=existing_booking)
         if form.is_valid():
@@ -181,67 +231,128 @@ def booking_update(request, booking_id):
 
 @login_required
 def booking_delete(request, booking_id):
-    # Renders the booking delete action
-    # checks to see if the user is_staff and has permissions to delete booking
-    if not request.user.is_staff:
-        messages.error(request, 'Sorry, you do not have permissions to do that.')
-        return redirect('booking_page')
-    
+    """
+    Deletes a booking.
+    """
     # Get the booking object or return a 404 error if not found
     booking = get_object_or_404(AssetBooking, booking_id=booking_id)
     
+    if not request.user.is_staff:
+        messages.error(request, 'Sorry, you do not have permissions to do that.')
+        return redirect('booking_page')
+
     if request.method == 'POST':
-        # Delete instances from Assetbooking where the booking_id is referenced
+        # Delete instances from AssetBooking where the booking_id is referenced
         AssetBooking.objects.filter(booking_id=booking_id).delete()
         
         messages.success(request, 'Booking deleted successfully.')
-    else:
-        messages.error(request, 'Invalid request method.')
-    
-    return redirect('booking_page')
+        return redirect('booking_page')
+
+    # Render a confirmation page for GET requests
+    return render(request, 'confirm_delete_booking.html', {'booking': booking})
 
 def login_request(request):
-    # Renders the log in request page
+    """
+    Handles user login.
+    """
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data.get('username')  # Assuming 'username' field is used for email input
+            email = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate_custom_user(email=email, password=password)
-            if user is not None:
-                if user.is_active:  # Ensure user account is active
-                    login(request, user)
-                    print("User logged in:", user)  # Debugging statement
-                    return redirect('/home_page')  # Redirect to some page after login
-                else:
-                    print("Inactive user:", user)  # Debugging statement
-                    messages.error(request, 'Your account is inactive.')
+            ip = get_client_ip(request)
+            key = f'failed_login_attempts_{ip}'
+            attempts, first_attempt_time = cache.get(key, (0, None))
+            
+            if attempts >= settings.MAX_FAILED_LOGIN_ATTEMPTS:
+                return redirect('lockout_timer')
             else:
-                print("Invalid credentials for email:", email)  # Debugging statement
-                messages.error(request, 'Invalid email or password. Please try again.')
+                if user is not None:
+                    if user.is_active:
+                        login(request, user)
+                        cache.delete(key)  # Reset attempts on successful login
+                        print("User logged in:", user)
+                        return redirect('/home_page')
+                    else:
+                        print("Inactive user:", user)
+                        messages.error(request, 'Your account is inactive.')
+                else:
+                    if attempts == 0:
+                        first_attempt_time = timezone.now()
+                    attempts += 1
+                    cache.set(key, (attempts, first_attempt_time), timeout=settings.FAILED_LOGIN_LOCK_DURATION)
+                    print("Invalid credentials for email:", email)
+                    messages.error(request, 'Invalid email or password. Please try again.')
         else:
             messages.error(request, 'Invalid form submission. Please try again.')
     else:
         form = LoginForm()
     return render(request, 'login_page.html', {'form': form})
 
+def lockout_timer_view(request):
+    """
+    Displays lockout timer for failed login attempts.
+    """
+    ip = get_client_ip(request)
+    key = f'failed_login_attempts_{ip}'
+    attempts, first_attempt_time = cache.get(key, (0, None))
+    if first_attempt_time:
+        lockout_time = settings.FAILED_LOGIN_LOCK_DURATION - (timezone.now() - first_attempt_time).total_seconds()
+        if lockout_time <= 0:
+            return redirect('login')  # Redirect to login page if lockout period is over
+    else:
+        lockout_time = 0
+    return render(request, 'lockout.html', {'lockout_time': lockout_time})
+
+def get_client_ip(request):
+    """
+    Retrieves the client's IP address.
+    """
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
 def register(request):
-    # Renders the register page
+    """
+    Handles user registration.
+    """
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            with transaction.atomic():
-                custom_user = form.save()  # Save user in CustomUser model
-                messages.success(request, 'User created successfully.')
-                return redirect('login')  # Redirect to login page on successful submission
+            password = form.cleaned_data.get('password')
+
+            if not password:
+                messages.error(request, 'Password field is empty.')
+                return render(request, 'register.html', {'form': form})
+
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                form.add_error('password', e)  # Add validation error to the password field
+                messages.error(request, 'Your password must be between 8-20 characters and include at least one special character.')
+            else:
+                with transaction.atomic():
+                    custom_user = form.save()
+                    messages.success(request, 'User created successfully.')
+                    return redirect('login')
         else:
             messages.error(request, 'Error creating user. Please check the form.')
+
+        # Re-render the form with entered data, including errors, but without clearing any field
+        return render(request, 'register.html', {'form': form})
+
     else:
         form = CustomUserCreationForm()
-    return render(request, 'register.html', {'form': form, 'error_messages': messages.get_messages(request)})
+    return render(request, 'register.html', {'form': form})
 
 def authenticate_custom_user(email, password):
-    # function for authenticating custom user
+    """
+    Authenticates a custom user.
+    """
     try:
         user = CustomUser.objects.get(email=email)
         if user.check_password(password):
@@ -250,7 +361,18 @@ def authenticate_custom_user(email, password):
             return None
     except CustomUser.DoesNotExist:
         return None
+    
+def confirm_logout(request):
+    """
+    Confirms user logout.
+    """
+    if request.method == 'POST':
+        logout(request)
+        return redirect('login')
+    return render(request, 'confirm_logout.html')
 
 def logout_request(request):
-    logout(request)
-    return redirect('login')
+    """
+    Redirects to the logout confirmation page.
+    """
+    return redirect('confirm_logout')
